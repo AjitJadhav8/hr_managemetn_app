@@ -2,17 +2,17 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-interface Candidate {
-  name: string;
-  position: string;
-  round_number: string;
-  interviewer: string;
-  interview_date: string;
-  hr_name: string;
-  status: string;
-  remarks: string;
-  candidateId?: number; // optional
-}
+// interface Candidate {
+//   name: string;
+//   position: string;
+//   round_number: string;
+//   interviewer: string;
+//   interview_date: string;
+//   hr_name: string;
+//   status: string;
+//   remarks: string;
+//   candidateId?: number; // optional
+// }
 @Component({
   selector: 'app-hr',
   standalone: true,
@@ -25,17 +25,16 @@ export class HRComponent implements OnInit {
   loggedInHRId: string | null = '';
   candidates: any[] = [];
 
-  // Use the Candidate interface
-  candidate: Candidate = {
-    name: '',
-    position: '',
+  // Candidate form
+  newCandidate: { name: string, position: string } = { name: '', position: '' };
+  
+  // Interview round form
+  newRound: { round_number: string, interviewer: string, interview_date: string, status: string, remarks: string } = {
     round_number: '',
     interviewer: '',
     interview_date: '',
-    hr_name: this.loggedInHR,
     status: '',
-    remarks: '',
-    candidateId: undefined // Initialize candidateId
+    remarks: ''
   };
 
   selectedCandidate: any = null;
@@ -70,50 +69,43 @@ export class HRComponent implements OnInit {
       );
   }
 
-  addOrUpdateCandidate() {
+  addNewCandidate() {
     const candidateData = {
-        ...this.candidate,
-        u_id: this.loggedInHRId // Ensure the HR ID is passed from the logged-in context
+      name: this.newCandidate.name,
+      position: this.newCandidate.position,
+      u_id: this.loggedInHRId
     };
 
     this.http.post('http://localhost:3000/api/candidates', candidateData)
-        .subscribe(
-            response => {
-                console.log('Candidate and interview round added:', response);
-                // Handle success (reset form, show notifications, etc.)
-            },
-            error => {
-                console.error('Error adding candidate:', error);
-                // Handle error feedback to the user
-            }
-        );
-}
-
+      .subscribe(
+        response => {
+          this.getCandidates(); // Refresh candidate list
+          this.newCandidate = { name: '', position: '' }; // Reset form
+        },
+        error => {
+          console.error('Error adding candidate:', error);
+        }
+      );
+  }
   
 
-  addNewInterviewRound() {
-    // Ensure we have a selected candidate before adding a new interview round
-    if (this.selectedCandidate) {
-      const newRound = {
-        ...this.selectedCandidate,
-        round_number: (parseInt(this.selectedCandidate.round_number, 10) + 1).toString() // Increment the round number
-      };
+addNewRound() {
+  const roundData = {
+    ...this.newRound,
+    c_id: this.selectedCandidate.Candidate_ID
+  };
 
-      // Update the candidate with the new round information
-      this.http.put(`http://localhost:3000/api/candidates/${this.selectedCandidate.candidateId}`, newRound)
-        .subscribe(
-          () => {
-            this.getCandidates(); // Refresh the candidates list
-            this.resetForm(); // Reset the form after updating
-          },
-          (error: { message?: string }) => {
-            console.error('There was an error adding the new interview round!', error.message || 'Unknown error');
-          }
-        );
-    } else {
-      console.error('No candidate selected to add a new interview round!');
-    }
-  }
+  this.http.post(`http://localhost:3000/api/candidates/${this.selectedCandidate.Candidate_ID}/interview-rounds`, roundData)
+    .subscribe(
+      () => {
+        this.getCandidates(); // Refresh candidate list
+        this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '' }; // Reset form
+      },
+      error => {
+        console.error('Error adding round:', error);
+      }
+    );
+}
 
 
 
@@ -121,17 +113,15 @@ export class HRComponent implements OnInit {
     this.selectedCandidate = candidate;
 
     // Set the candidateId from the selected candidate
-    this.candidate = {
-      name: candidate.Candidate_Name || '',
-      position: candidate.Position || '',
+    
+    // Update the form with selected candidate details
+    this.newRound = {
       round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1', // Default to '1' if NaN
       interviewer: candidate.Interviewer || '',
       interview_date: candidate.Interview_Date || '', // Ensure this is in the correct format
-      hr_name: this.loggedInHR,
       status: candidate.Status || '',
-      remarks: candidate.Remarks || '',
-      candidateId: candidate.Candidate_ID // This should now work
-    } as Candidate; // Cast to Candidate type
+      remarks: candidate.Remarks || ''
+    };
   }
 
   deleteCandidate(id: number) {
@@ -147,16 +137,12 @@ export class HRComponent implements OnInit {
   }
 
   resetForm() {
-    this.candidate = {
-      name: '',
-      position: '',
+    this.newRound = {
       round_number: '',
       interviewer: '',
       interview_date: '',
-      hr_name: this.loggedInHR,
       status: '',
-      remarks: '',
-      candidateId: undefined // Reset candidateId as well
+      remarks: ''
     };
     this.selectedCandidate = null;
   }

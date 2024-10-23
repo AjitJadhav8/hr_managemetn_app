@@ -1,59 +1,26 @@
-<h2>Candidate Management</h2>
+<!-- Header Section -->
+<h1>HR Dashboard</h1>
+<p>Welcome, {{ loggedInHR }}</p>
 
-<label>Logged-in HR: {{ loggedInHR }}</label>
-
-<button type="button" (click)="resetForm()">Reset</button>
-
-<form (ngSubmit)="addOrUpdateCandidate()" #candidateForm="ngForm" style="margin-top: 20px;">
-  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-    <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
-      <label>Name:</label>
-      <input [(ngModel)]="candidate.name" name="name" required placeholder="Enter candidate name">
-    </div>
-
-    <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
-      <label>Position:</label>
-      <input [(ngModel)]="candidate.position" name="position" required placeholder="Enter position">
-    </div>
-
-    <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
-      <label>Round Number:</label>
-      <input type="number" [(ngModel)]="candidate.round_number" name="round_number" required placeholder="Enter round number">
-    </div>
-
-    <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
-      <label>Interviewer:</label>
-      <input [(ngModel)]="candidate.interviewer" name="interviewer" required placeholder="Enter interviewer name">
-    </div>
-
-    <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
-      <label>Interview Date:</label>
-      <input type="date" [(ngModel)]="candidate.interview_date" name="interview_date" required>
-    </div>
-
-    <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
-      <label>Status:</label>
-      <input 
-        [(ngModel)]="candidate.status" 
-        name="status" 
-        required 
-        placeholder="Enter status"
-      />
-    </div>
-
-    <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
-      <label>Remarks:</label>
-      <textarea [(ngModel)]="candidate.remarks" name="remarks" placeholder="Enter remarks"></textarea>
-    </div>
-
-    <button type="submit" style="flex: 1 0 20%; margin-top: 10px;">
-      {{ selectedCandidate ? 'Save with Updated Round' : 'Save Candidate' }}
-    </button>
+<!-- Add New Candidate Form -->
+<h2>Add New Candidate</h2>
+<form (ngSubmit)="addNewCandidate()">
+  <div>
+    <label for="name">Name:</label>
+    <input [(ngModel)]="newCandidate.name" name="name" required>
   </div>
+  <div>
+    <label for="position">Position:</label>
+    <input [(ngModel)]="newCandidate.position" name="position" required>
+  </div>
+  <button type="submit">Add Candidate</button>
 </form>
 
-<h3>Candidate List</h3>
-<table border="1" style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+<hr>
+
+<!-- Candidate List Section -->
+<h2>Candidate List</h2>
+<table>
   <thead>
     <tr>
       <th>Name</th>
@@ -67,18 +34,53 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let candidate of candidates">
+    <tr *ngFor="let candidate of candidates" (click)="selectCandidate(candidate)">
       <td>{{ candidate.Candidate_Name }}</td>
       <td>{{ candidate.Position }}</td>
-      <td>{{ candidate.Round_Number }}</td>
-      <td>{{ candidate.Interviewer }}</td>
-      <td>{{ candidate.Interview_Date | date:'shortDate' }}</td>
-      <td>{{ candidate.Status }}</td>
-      <td>{{ candidate.Remarks }}</td>
+      <td>{{ candidate.Round_Number || 'N/A' }}</td>
+      <td>{{ candidate.Interviewer || 'N/A' }}</td>
+      <td>{{ candidate.Interview_Date || 'N/A' }}</td>
+      <td>{{ candidate.Status || 'N/A' }}</td>
+      <td>{{ candidate.Remarks || 'N/A' }}</td>
       <td>
-        <button type="button" (click)="selectCandidate(candidate)">Select</button>
-        <button type="button" (click)="deleteCandidate(candidate.Candidate_ID)">Delete</button>
+        <button (click)="deleteCandidate(candidate.Candidate_ID); $event.stopPropagation()">Delete</button>
       </td>
     </tr>
   </tbody>
 </table>
+
+<hr>
+
+<!-- Add New Interview Round Form for Selected Candidate -->
+<div *ngIf="selectedCandidate">
+  <h2>Add Interview Round for {{ selectedCandidate.Candidate_Name }}</h2>
+
+  <form (ngSubmit)="addNewRound()">
+    <div>
+      <label for="round_number">Round Number:</label>
+      <input [(ngModel)]="newRound.round_number" name="round_number" readonly>
+    </div>
+    <div>
+      <label for="interviewer">Interviewer:</label>
+      <input [(ngModel)]="newRound.interviewer" name="interviewer" required>
+    </div>
+    <div>
+      <label for="interview_date">Interview Date:</label>
+      <input type="date" [(ngModel)]="newRound.interview_date" name="interview_date" required>
+    </div>
+    <div>
+      <label for="status">Status:</label>
+      <input [(ngModel)]="newRound.status" name="status" required>
+    </div>
+    <div>
+      <label for="remarks">Remarks:</label>
+      <textarea [(ngModel)]="newRound.remarks" name="remarks"></textarea>
+    </div>
+    <button type="submit">Add Interview Round</button>
+  </form>
+</div>
+
+<!-- Reset Button -->
+<div *ngIf="selectedCandidate">
+  <button (click)="resetForm()">Reset Form</button>
+</div>

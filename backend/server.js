@@ -30,25 +30,40 @@ app.get('/api/candidates', (req, res) => {
         return res.status(400).json({ error: 'HR user ID is required' });
     }
 
-    const query = `
-        SELECT 
-            c.c_id AS Candidate_ID,
-            c.c_name AS Candidate_Name,
-            c.position AS Position,
-            ir.round_number AS Round_Number,
-            ir.interviewer AS Interviewer,
-            ir.interview_date AS Interview_Date,
-            ir.status AS Status,
-            ir.remarks AS Remarks
-        FROM 
-            candidates c
-        INNER JOIN 
-            interview_rounds ir ON c.c_id = ir.c_id
-        WHERE 
-            c.u_id = ?
-        ORDER BY 
-            c.c_id, ir.round_number
-    `;
+//     SELECT 
+//     c.c_id AS Candidate_ID,
+//     c.c_name AS Candidate_Name,
+//     c.position AS Position,
+//     ir.round_number AS Round_Number,
+//     ir.interviewer AS Interviewer,
+//     ir.interview_date AS Interview_Date,
+//     ir.status AS Status,
+//     ir.remarks AS Remarks
+// FROM 
+//     candidates c
+// INNER JOIN 
+//     interview_rounds ir ON c.c_id = ir.c_id
+// WHERE 
+//     c.u_id = ?
+// ORDER BY 
+//     c.c_id, ir.round_number
+    const query = `SELECT 
+    c.c_id AS Candidate_ID,
+    c.c_name AS Candidate_Name,
+    c.position AS Position,
+    ir.round_number AS Round_Number,
+    ir.interviewer AS Interviewer,
+    ir.interview_date AS Interview_Date,
+    ir.status AS Status,
+    ir.remarks AS Remarks
+FROM 
+    candidates c
+LEFT JOIN 
+    interview_rounds ir ON c.c_id = ir.c_id
+WHERE 
+    c.u_id = ?
+ORDER BY 
+    c.c_id, ir.round_number;`;
 
     db.query(query, [u_id], (err, results) => {
         if (err) {
@@ -62,98 +77,54 @@ app.get('/api/candidates', (req, res) => {
 
   
 
-// Add a new candidate and first interview round
-// app.post('/api/candidates', (req, res) => {
-//   const { name, position, round_number, interviewer, interview_date, status, remarks } = req.body;
-//   const upperCaseName = name.toUpperCase();
-
-//   // Insert into candidates table
-//   const insertCandidateQuery = 'INSERT INTO candidates (c_name, position) VALUES (?, ?)';
-  
-//   db.query(insertCandidateQuery, [upperCaseName, position], (err, result) => {
-//     if (err) {
-//       res.status(500).json({ error: err });
-//     } else {
-//       const candidateId = result.insertId;
-
-//       // Insert into interview_rounds table
-//       const insertRoundQuery = `
-//         INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks) 
-//         VALUES (?, ?, ?, ?, ?, ?)
-//       `;
-      
-//       db.query(insertRoundQuery, [candidateId, round_number, interviewer, interview_date, status, remarks], (err) => {
-//         if (err) {
-//           res.status(500).json({ error: err });
-//         } else {
-//           res.json({ message: 'Candidate and first round added', candidateId });
-//         }
-//       });
-//     }
-//   });
-// });
-
-// Add or update a candidate and interview round
-// Add a new candidate and interview round, or update the interview round for an existing candidate
-// Add a new candidate with interview round
+// Add a new candidate (without interview rounds)
 app.post('/api/candidates', (req, res) => {
-  const { name, position, round_number, interviewer, interview_date, status, remarks, u_id } = req.body;
+  const { name, position, u_id } = req.body;
 
-  // Validate required fields
-  if (!name || !position || !round_number || !interviewer || !interview_date || !status || !u_id) {
-      return res.status(400).json({ error: 'All fields are required' });
+  if (!name || !position || !u_id) {
+    return res.status(400).json({ error: 'All fields are required' });
   }
 
   const upperCaseName = name.toUpperCase();
 
-  // Insert new candidate
   const addCandidateQuery = `
-      INSERT INTO candidates (c_name, position, u_id) VALUES (?, ?, ?)
+    INSERT INTO candidates (c_name, position, u_id) VALUES (?, ?, ?)
   `;
 
   db.query(addCandidateQuery, [upperCaseName, position, u_id], (err, result) => {
-      if (err) {
-          console.error('Error inserting candidate:', err);
-          return res.status(500).json({ error: err.message || 'Database error' });
-      }
+    if (err) {
+      console.error('Error inserting candidate:', err);
+      return res.status(500).json({ error: err.message || 'Database error' });
+    }
 
-      const newCandidateId = result.insertId; // Get the new candidate ID
-
-      // Add entry in the interview_rounds table
-      const addInterviewRoundQuery = `
-          INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks) VALUES (?, ?, ?, ?, ?, ?)
-      `;
-
-      db.query(addInterviewRoundQuery, [newCandidateId, round_number, interviewer, interview_date, status, remarks], (err) => {
-          if (err) {
-              console.error('Error inserting interview round:', err);
-              return res.status(500).json({ error: err.message || 'Database error' });
-          }
-          res.status(201).json({ message: 'Candidate and interview round added successfully', c_id: newCandidateId });
-      });
+    res.status(201).json({ message: 'Candidate added successfully', c_id: result.insertId });
   });
 });
 
 
 
-
+// Add a new interview round for an existing candidate
 app.post('/api/candidates/:id/interview-rounds', (req, res) => {
   const { id } = req.params; // Candidate ID from the URL
   const { round_number, interviewer, interview_date, status, remarks } = req.body;
 
-  // Add new entry in the ir table for the existing candidate
+  if (!round_number || !interviewer || !interview_date || !status) {
+    return res.status(400).json({ error: 'All fields are required for the interview round' });
+  }
+
   const addInterviewRoundQuery = `
-    INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks) VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks) 
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
 
   db.query(addInterviewRoundQuery, [id, round_number, interviewer, interview_date, status, remarks], (err) => {
     if (err) {
-      return res.status(500).json({ error: err });
+      console.error('Error inserting interview round:', err);
+      return res.status(500).json({ error: err.message || 'Database error' });
     }
     res.status(201).json({ message: 'Interview round added successfully' });
   });
 });
-
 
 
 
