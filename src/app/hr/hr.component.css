@@ -1,0 +1,33 @@
+form {
+    display: flex;
+    flex-direction: column; /* Stack the entire form vertically */
+  }
+  
+  form div {
+    margin-right: 10px; /* Space between fields */
+  }
+  
+  form label {
+    margin-bottom: 5px; /* Space between label and input */
+  }
+  
+  form input, form select, form textarea {
+    width: 200px; /* Fixed width for inputs */
+    padding: 8px; /* Add some padding for comfort */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 4px; /* Rounded corners */
+  }
+  
+  button {
+    padding: 10px; /* Padding for button */
+    background-color: #007bff; /* Button color */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }
+  
