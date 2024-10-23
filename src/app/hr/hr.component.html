@@ -2,37 +2,35 @@
 
 <label>Logged-in HR: {{ loggedInHR }}</label>
 
-<button type="button" (click)="resetForm()">Add Candidate</button>
+<button type="button" (click)="resetForm()">Reset</button>
 
 <form (ngSubmit)="addOrUpdateCandidate()" #candidateForm="ngForm" style="margin-top: 20px;">
   <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-    <div style="display: flex; flex-direction: column; flex: 1 0 20%;"> <!-- Each field takes 20% width -->
+    <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
       <label>Name:</label>
       <input [(ngModel)]="candidate.name" name="name" required placeholder="Enter candidate name">
     </div>
-    
+
     <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
       <label>Position:</label>
       <input [(ngModel)]="candidate.position" name="position" required placeholder="Enter position">
     </div>
-    
+
     <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
       <label>Round Number:</label>
       <input type="number" [(ngModel)]="candidate.round_number" name="round_number" required placeholder="Enter round number">
     </div>
-    
+
     <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
       <label>Interviewer:</label>
       <input [(ngModel)]="candidate.interviewer" name="interviewer" required placeholder="Enter interviewer name">
     </div>
-    
+
     <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
       <label>Interview Date:</label>
       <input type="date" [(ngModel)]="candidate.interview_date" name="interview_date" required>
     </div>
-    
 
-    
     <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
       <label>Status:</label>
       <input 
@@ -42,19 +40,17 @@
         placeholder="Enter status"
       />
     </div>
-    
-    
+
     <div style="display: flex; flex-direction: column; flex: 1 0 20%;">
       <label>Remarks:</label>
       <textarea [(ngModel)]="candidate.remarks" name="remarks" placeholder="Enter remarks"></textarea>
     </div>
-    
+
     <button type="submit" style="flex: 1 0 20%; margin-top: 10px;">
       {{ selectedCandidate ? 'Save with Updated Round' : 'Save Candidate' }}
     </button>
   </div>
 </form>
-
 
 <h3>Candidate List</h3>
 <table border="1" style="width: 100%; margin-top: 20px; border-collapse: collapse;">
@@ -81,7 +77,7 @@
       <td>{{ candidate.Remarks }}</td>
       <td>
         <button type="button" (click)="selectCandidate(candidate)">Select</button>
-        <button type="button" (click)="deleteCandidate(candidate.c_id)">Delete</button>
+        <button type="button" (click)="deleteCandidate(candidate.Candidate_ID)">Delete</button>
       </td>
     </tr>
   </tbody>
