@@ -1,0 +1,43 @@
+<h2>CEO Candidate Overview</h2>
+
+<!-- Candidate statistics -->
+<h3>Candidate Statistics</h3>
+<ul>
+  <li>Total Candidates: {{ candidateStats.total }}</li>
+  <li>Selected: {{ candidateStats.selected }}</li>
+  <li>Rejected: {{ candidateStats.rejected }}</li>
+  <li>On Hold: {{ candidateStats.onHold }}</li>
+  <li>Joined: {{ candidateStats.joined }}</li>
+  <li>Offered: {{ candidateStats.offered }}</li>
+  <li>Candidate Drop: {{ candidateStats.candidateDrop }}</li>
+  <li>Interview Scheduled: {{ candidateStats.interviewScheduled }}</li>
+</ul>
+
+<!-- Candidate list table -->
+<h3>Candidate List</h3>
+<table border="1" style="width: 100%; margin-top: 20px;">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Position</th>
+      <th>Round Number</th>
+      <th>Interviewer</th>
+      <th>Interview Date</th>
+      <th>HR Name</th>
+      <th>Status</th>
+      <th>Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let candidate of candidates">
+      <td>{{ candidate.name }}</td>
+      <td>{{ candidate.position }}</td>
+      <td>{{ candidate.round_number }}</td>
+      <td>{{ candidate.interviewer }}</td>
+      <td>{{ candidate.interview_date }}</td>
+      <td>{{ candidate.hr_name }}</td>
+      <td>{{ candidate.status }}</td>
+      <td>{{ candidate.remarks }}</td>
+    </tr>
+  </tbody>
+</table>

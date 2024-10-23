@@ -1,0 +1,89 @@
+<h2>Candidate Management</h2>
+
+<label>Logged-in HR: {{ loggedInHR }}</label>
+
+<button type="button" (click)="resetForm()">Add Candidate</button>
+
+<form (ngSubmit)="addOrUpdateCandidate()" #candidateForm="ngForm" style="margin-top: 20px;">
+  <div>
+    <label>Name:</label>
+    <input [(ngModel)]="candidateForm.name" name="name" required placeholder="Enter candidate name">
+  </div>
+  
+  <div>
+    <label>Position:</label>
+    <input [(ngModel)]="candidate.position" name="position" required placeholder="Enter position">
+  </div>
+  
+  <div>
+    <label>Round Number:</label>
+    <input type="number" [(ngModel)]="candidate.round_number" name="round_number" required placeholder="Enter round number">
+  </div>
+  
+  <div>
+    <label>Interviewer:</label>
+    <input [(ngModel)]="candidate.interviewer" name="interviewer" required placeholder="Enter interviewer name">
+  </div>
+  
+  <div>
+    <label>Interview Date:</label>
+    <input type="date" [(ngModel)]="candidate.interview_date" name="interview_date" required>
+  </div>
+  
+  <div>
+    <label>HR Name:</label>
+    <input [(ngModel)]="candidate.hr_name" name="hr_name" [value]="loggedInHR" disabled>
+  </div>
+  
+  <div>
+    <label>Status:</label>
+    <select [(ngModel)]="candidateForm.status" name="status" required>
+      <option value="" disabled selected>Select status</option>
+      <option value="Selected">Selected</option>
+      <option value="Rejected">Rejected</option>
+      <option value="On Hold">On Hold</option>
+    </select>
+  </div>
+  
+  <div>
+    <label>Remarks:</label>
+    <textarea [(ngModel)]="candidate.remarks" name="remarks" placeholder="Enter remarks"></textarea>
+  </div>
+  
+  <button type="submit" style="margin-top: 10px;">
+    {{ selectedCandidate ? 'Save with Updated Round' : 'Save Candidate' }}
+  </button>
+</form>
+
+<h3>Candidate List</h3>
+<table border="1" style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Position</th>
+      <th>Round Number</th>
+      <th>Interviewer</th>
+      <th>Interview Date</th>
+      <th>HR Name</th>
+      <th>Status</th>
+      <th>Remarks</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let candidate of candidates">
+      <td>{{ candidate.Candidate_Name }}</td>
+      <td>{{ candidate.Position }}</td>
+      <td>{{ candidate.Round_Number }}</td>
+      <td>{{ candidate.Interviewer }}</td>
+      <td>{{ candidate.Interview_Date | date:'shortDate' }}</td>
+      <td>{{ candidate.hr_name }}</td>
+      <td>{{ candidate.Status }}</td>
+      <td>{{ candidate.Remarks }}</td>
+      <td>
+        <button type="button" (click)="selectCandidate(candidate)">Select</button>
+        <button type="button" (click)="deleteCandidate(candidate.c_id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
