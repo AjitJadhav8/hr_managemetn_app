@@ -63,7 +63,7 @@
   <form (ngSubmit)="addNewRound()">
     <div>
       <label for="round_number">Round Number:</label>
-      <input [(ngModel)]="newRound.round_number" name="round_number" readonly>
+      <input [(ngModel)]="newRound.round_number" name="round_number" required>
     </div>
     <div>
       <label for="interviewer">Interviewer:</label>
@@ -73,10 +73,35 @@
       <label for="interview_date">Interview Date:</label>
       <input type="date" [(ngModel)]="newRound.interview_date" name="interview_date" required>
     </div>
-    <div>
+    <!-- <div>
       <label for="status">Status:</label>
       <input [(ngModel)]="newRound.status" name="status" required>
+    </div> -->
+
+    <div>
+      <label for="status">Status:</label>
+      <select [(ngModel)]="newRound.status" name="status" required>
+        <option value="" disabled>Select status</option>
+        <option value="Scheduled">Scheduled</option>
+        <option value="On Hold">On Hold</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Selected">Selected</option>
+        <option value="Joined">Joined</option>
+        <option value="Offered">Offered</option>
+        <option value="Candidate Drop">Candidate Drop</option>
+        <option value="Interview is scheduled">Interview is scheduled</option>
+        <option value="Custom">Custom</option> <!-- For custom status -->
+      </select>
     </div>
+    
+    <!-- Custom status input -->
+    <div *ngIf="newRound.status === 'Custom'">
+      <label for="customStatus">Enter Custom Status:</label>
+      <input type="text" [(ngModel)]="newRound.customStatus" name="customStatus" placeholder="Type your status here">
+    </div>
+    
+
+
     <div>
       <label for="remarks">Remarks:</label>
       <textarea [(ngModel)]="newRound.remarks" name="remarks"></textarea>

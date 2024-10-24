@@ -19,12 +19,20 @@ export class HRComponent implements OnInit {
   newCandidate: { name: string, position: string } = { name: '', position: '' };
   
   // Interview round form
-  newRound: { round_number: string, interviewer: string, interview_date: string, status: string, remarks: string } = {
+  newRound: {
+    round_number: string;
+    interviewer: string;
+    interview_date: string;
+    status: string;
+    remarks: string;
+    customStatus?: string; // Add customStatus as optional
+  } = {
     round_number: '',
     interviewer: '',
     interview_date: '',
     status: '',
-    remarks: ''
+    remarks: '',
+    customStatus: '' // Initialize as an empty string
   };
 
   selectedCandidate: any = null;
@@ -91,25 +99,44 @@ export class HRComponent implements OnInit {
   }
   
 
+// addNewRound() {
+//   const roundData = {
+//     ...this.newRound,
+//     interview_date: this.formatLocalDate(this.newRound.interview_date), // Correct date handling
+//     c_id: this.selectedCandidate.Candidate_ID
+//   };
+
+//   this.http.post(`http://localhost:3000/api/candidates/${this.selectedCandidate.Candidate_ID}/interview-rounds`, roundData)
+//     .subscribe(
+//       () => {
+//         this.getCandidates(); // Refresh candidate list
+//         this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '' }; // Reset form
+//       },
+//       error => {
+//         console.error('Error adding round:', error);
+//       }
+//     );
+// }
+
 addNewRound() {
   const roundData = {
     ...this.newRound,
     interview_date: this.formatLocalDate(this.newRound.interview_date), // Correct date handling
-    c_id: this.selectedCandidate.Candidate_ID
+    c_id: this.selectedCandidate.Candidate_ID,
+    status: this.newRound.status === 'Custom' ? this.newRound.customStatus : this.newRound.status // Use custom status if selected
   };
 
   this.http.post(`http://localhost:3000/api/candidates/${this.selectedCandidate.Candidate_ID}/interview-rounds`, roundData)
     .subscribe(
       () => {
         this.getCandidates(); // Refresh candidate list
-        this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '' }; // Reset form
+        this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '', customStatus: '' }; // Reset form
       },
       error => {
         console.error('Error adding round:', error);
       }
     );
 }
-
 
 
   selectCandidate(candidate: any) {
@@ -169,7 +196,6 @@ addNewRound() {
     }
   }
   
-
 
   resetForm() {
     this.newRound = {
