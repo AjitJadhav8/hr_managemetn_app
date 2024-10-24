@@ -1,3 +1,6 @@
+<div class="container">
+
+
 <!-- Header Section -->
 <h1>HR Dashboard</h1>
 <p>Welcome, {{ loggedInHR }}</p>
@@ -82,7 +85,21 @@
   </form>
 </div>
 
+
+<!-- Candidate Form -->
+<form *ngIf="selectedCandidate" (submit)="updateCandidate()">
+  <label for="name">Name:</label>
+  <input type="text" [(ngModel)]="selectedCandidate.Candidate_Name" name="name" required>
+  
+  <label for="position">Position:</label>
+  <input type="text" [(ngModel)]="selectedCandidate.Position" name="position" required>
+  
+  <button type="submit">Update Candidate</button>
+</form>
+
+
 <!-- Reset Button -->
 <div *ngIf="selectedCandidate">
   <button (click)="resetForm()">Reset Form</button>
+</div>
 </div>

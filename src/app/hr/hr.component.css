@@ -1,33 +1,150 @@
+/* General Styles */
+:host {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f4f4f4;
+}
+
+h1, h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+p {
+  color: #555;
+}
+
+/* Form Styling */
 form {
-    display: flex;
-    flex-direction: column; /* Stack the entire form vertically */
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+thead th {
+  background-color: #343a40;
+  color: white;
+  padding: 10px;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+tbody td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+td button {
+  margin-right: 10px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+td button:hover {
+  background-color: #0056b3;
+}
+
+button.delete {
+  background-color: #dc3545;
+}
+
+button.delete:hover {
+  background-color: #c82333;
+}
+
+/* Interview Round Form */
+div[ngIf="selectedCandidate"] {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  input, textarea, button {
+    font-size: 12px;
+    padding: 8px;
   }
-  
-  form div {
-    margin-right: 10px; /* Space between fields */
+
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
   }
-  
-  form label {
-    margin-bottom: 5px; /* Space between label and input */
+
+  tr {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
-  
-  form input, form select, form textarea {
-    width: 200px; /* Fixed width for inputs */
-    padding: 8px; /* Add some padding for comfort */
-    border: 1px solid #ccc; /* Border for inputs */
-    border-radius: 4px; /* Rounded corners */
+
+  td {
+    padding: 10px;
+    text-align: left;
+    display: block;
   }
-  
-  button {
-    padding: 10px; /* Padding for button */
-    background-color: #007bff; /* Button color */
-    color: white; /* Button text color */
-    border: none; /* Remove border */
-    border-radius: 4px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
+
+  td button {
+    width: 100%;
+    margin-bottom: 10px;
   }
-  
-  button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-  }
-  
+}

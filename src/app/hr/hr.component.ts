@@ -114,7 +114,7 @@ addNewRound() {
 
   selectCandidate(candidate: any) {
     this.selectedCandidate = candidate;
-
+  
     // Set the candidateId from the selected candidate
     
     // Update the form with selected candidate details
@@ -147,6 +147,29 @@ addNewRound() {
     }
   }
   
+  updateCandidate() {
+    if (this.selectedCandidate) {
+      const updatedCandidate = {
+        name: this.selectedCandidate.Candidate_Name, // The updated name from the form
+        position: this.selectedCandidate.Position    // The updated position from the form
+      };
+  
+      this.http.put(`http://localhost:3000/api/candidates/${this.selectedCandidate.Candidate_ID}`, updatedCandidate)
+        .subscribe(
+          (response) => {
+            console.log('Candidate updated:', response);
+            this.getCandidates(); // Refresh the candidate list after updating
+          },
+          (error) => {
+            console.error('Error updating candidate:', error);
+          }
+        );
+    } else {
+      console.error('No candidate selected for update.');
+    }
+  }
+  
+
 
   resetForm() {
     this.newRound = {

@@ -170,6 +170,38 @@ app.post('/api/login', (req, res) => {
     });
   });
   
+// Update a candidate's name and position
+app.put('/api/candidates/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, position } = req.body;
+
+  if (!name || !position) {
+    return res.status(400).json({ error: 'Name and position are required' });
+  }
+
+  const upperCaseName = name.toUpperCase(); // Ensure the name is stored in uppercase
+
+  const updateCandidateQuery = `
+    UPDATE candidates 
+    SET c_name = ?, position = ?
+    WHERE c_id = ?
+  `;
+
+  db.query(updateCandidateQuery, [upperCaseName, position, id], (err, result) => {
+    if (err) {
+      console.error('Error updating candidate:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Candidate not found' });
+    }
+
+    res.json({ message: 'Candidate updated successfully' });
+  });
+});
+
+
 
 // Start the server
 app.listen(port, () => {
