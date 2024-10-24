@@ -129,18 +129,26 @@ app.post('/api/candidates/:id/interview-rounds', (req, res) => {
 
 
 // Delete a candidate
-app.delete('/api/candidates/:id', (req, res) => {
-  const { id } = req.params;
-  const query = 'DELETE FROM candidates WHERE c_id = ?';
-  
-  db.query(query, [id], (err) => {
+// Delete an interview round for a candidate
+app.delete('/api/candidates/:id/interview-rounds/:round_number', (req, res) => {
+  const { id, round_number } = req.params;
+
+  const query = 'DELETE FROM interview_rounds WHERE c_id = ? AND round_number = ?';
+
+  db.query(query, [id, round_number], (err, result) => {
     if (err) {
-      res.status(500).json({ error: err });
-    } else {
-      res.json({ message: 'Candidate deleted' });
+      console.error('Error deleting interview round:', err);
+      return res.status(500).json({ error: err.message || 'Database error' });
     }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Interview round not found' });
+    }
+
+    res.json({ message: 'Interview round deleted successfully' });
   });
 });
+
 
 
 

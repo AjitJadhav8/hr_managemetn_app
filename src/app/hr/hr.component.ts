@@ -45,11 +45,11 @@ export class HRComponent implements OnInit {
   }
 
 
-  formatDate(dateString: string): string {
+  formatLocalDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // Convert to yyyy-mm-dd
+    const userTimezoneOffset = date.getTimezoneOffset() * 60000; // Get the timezone offset in milliseconds
+    return new Date(date.getTime() - userTimezoneOffset).toISOString().split('T')[0];
   }
-
 
   getCandidates() {
     console.log('Fetching candidates for HR ID:', this.loggedInHRId);
@@ -60,7 +60,7 @@ export class HRComponent implements OnInit {
           this.candidates = data.map(candidate => {
             return {
               ...candidate,
-              Interview_Date: this.formatDate(candidate.Interview_Date) // Format date here
+              Interview_Date: this.formatLocalDate(candidate.Interview_Date) // Format date here
             };
           });
           console.log('Fetched candidates:', this.candidates);
@@ -94,6 +94,7 @@ export class HRComponent implements OnInit {
 addNewRound() {
   const roundData = {
     ...this.newRound,
+    interview_date: this.formatLocalDate(this.newRound.interview_date), // Correct date handling
     c_id: this.selectedCandidate.Candidate_ID
   };
 
@@ -126,18 +127,19 @@ addNewRound() {
     };
   }
 
-  deleteCandidate(id: number) {
+  deleteInterviewRound(candidateId: number, roundNumber: string, candidateName: string) {
     // Show confirmation dialog
-    const confirmDelete = confirm('Are you sure you want to delete this candidate?');
+    const confirmDelete = confirm(`Are you sure you want to delete interview round ${roundNumber} for ${candidateName}?`);
     
     if (confirmDelete) {
-      this.http.delete(`http://localhost:3000/api/candidates/${id}`)
+      this.http.delete(`http://localhost:3000/api/candidates/${candidateId}/interview-rounds/${roundNumber}`)
         .subscribe(
           (response) => {
+            console.log('Interview round deleted:', response);
             this.getCandidates(); // Refresh candidate list after deletion
           },
           (error) => {
-            console.error('There was an error deleting the candidate!', error);
+            console.error('There was an error deleting the interview round!', error);
           }
         );
     } else {
