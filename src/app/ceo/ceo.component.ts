@@ -12,40 +12,52 @@ import { FormsModule } from '@angular/forms';
 })
 export class CEOComponent implements OnInit {
   candidates: any[] = [];
-  candidateStats: any = {}; // To hold summary statistics about candidates
+  selectedCandidate: any = null;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.getCandidates();
+    this.getAllCandidates();
   }
 
-  getCandidates() {
-    this.http.get<any[]>('http://localhost:3000/api/candidates').subscribe(
-      (data) => {
-        this.candidates = data;
-        this.calculateCandidateStats(data);
-      },
-      (error) => {
-        console.error('There was an error fetching the candidates!', error);
+  getAllCandidates() {
+    this.http.get<any[]>('http://localhost:3000/api/all-candidates')
+      .subscribe(
+        data => {
+          // Filter for distinct candidates using the c_id to avoid duplicates
+          this.candidates = this.getDistinctCandidates(data);
+          console.log('Filtered candidates:', this.candidates);
+        },
+        error => {
+          console.error('Error fetching candidates:', error);
+        }
+      );
+  }
+
+  getDistinctCandidates(data: any[]) {
+    // Use a map to track unique candidates by c_id
+    const distinctCandidates = new Map();
+    data.forEach(candidate => {
+      if (!distinctCandidates.has(candidate.Candidate_ID)) {
+        distinctCandidates.set(candidate.Candidate_ID, candidate);
       }
-    );
+    });
+    return Array.from(distinctCandidates.values());
   }
 
-  calculateCandidateStats(candidates: any[]) {
-    const totalCandidates = candidates.length;
-    const selected = candidates.filter(c => c.status === 'Selected').length;
-    const rejected = candidates.filter(c => c.status === 'Rejected').length;
+  openModal(candidate: any) {
+    this.http.get<any>(`http://localhost:3000/api/candidates/${candidate.Candidate_ID}/details`)
+      .subscribe(
+        data => {
+          this.selectedCandidate = data;
+        },
+        error => {
+          console.error('Error fetching candidate details:', error);
+        }
+      );
+  }
 
-    this.candidateStats = {
-      total: totalCandidates,
-      selected: selected,
-      rejected: rejected,
-      onHold: candidates.filter(c => c.status === 'On Hold').length,
-      joined: candidates.filter(c => c.status === 'Joined').length,
-      offered: candidates.filter(c => c.status === 'Offered').length,
-      candidateDrop: candidates.filter(c => c.status === 'Candidate Drop').length,
-      interviewScheduled: candidates.filter(c => c.status === 'Interview is Scheduled').length
-    };
+  closeModal() {
+    this.selectedCandidate = null;
   }
 }

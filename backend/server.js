@@ -202,6 +202,118 @@ app.put('/api/candidates/:id', (req, res) => {
 });
 
 
+// ceo
+// Get all candidates from all HRs
+// Get all candidates from all HRs
+// app.get('/api/all-candidates', (req, res) => {
+//   const query = `
+//   SELECT 
+//       c.c_id AS Candidate_ID,
+//       c.c_name AS Candidate_Name,
+//       c.position AS Position,
+//       c.u_id AS HR_ID,
+//       u.name AS HR_Name,  -- Fetch HR name from the users table
+//       ir.round_number AS Round_Number,
+//       ir.interviewer AS Interviewer,
+//       ir.interview_date AS Interview_Date,
+//       ir.status AS Status,
+//       ir.remarks AS Remarks
+//   FROM 
+//       candidates c
+//   LEFT JOIN 
+//       interview_rounds ir ON c.c_id = ir.c_id
+//   LEFT JOIN 
+//       users u ON c.u_id = u.u_id  -- Join with users table to get HR names
+//   ORDER BY 
+//       c.c_id, ir.round_number;`;
+
+//   db.query(query, (err, results) => {
+//       if (err) {
+//           console.error('Database query error:', err);
+//           return res.status(500).json({ error: 'Database query error' });
+//       }
+//       console.log('Query results:', results);
+//       res.json(results);
+//   });
+// });
+
+// Get all distinct candidates from all HRs (no interview details in the list)
+app.get('/api/all-candidates', (req, res) => {
+  const query = `
+  SELECT DISTINCT 
+      c.c_id AS Candidate_ID,
+      c.c_name AS Candidate_Name,
+      c.position AS Position,
+      u.name AS HR_Name  -- Fetch HR name from the users table
+  FROM 
+      candidates c
+  LEFT JOIN 
+      users u ON c.u_id = u.u_id
+  ORDER BY 
+      c.c_id;
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ error: 'Database query error' });
+    }
+    console.log('Distinct candidates results:', results);
+    res.json(results);
+  });
+});
+
+// Get candidate details by ID (including all interview rounds)
+app.get('/api/candidates/:id/details', (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+  SELECT 
+    c.c_id AS Candidate_ID,
+    c.c_name AS Candidate_Name,
+    c.position AS Position,
+    u.name AS HR_Name,
+    ir.round_number AS Round_Number,
+    ir.interviewer AS Interviewer,
+    ir.interview_date AS Interview_Date,
+    ir.status AS Status,
+    ir.remarks AS Remarks
+  FROM 
+    candidates c
+  LEFT JOIN 
+    interview_rounds ir ON c.c_id = ir.c_id
+  LEFT JOIN 
+    users u ON c.u_id = u.u_id
+  WHERE 
+    c.c_id = ?
+  ORDER BY 
+    ir.round_number;
+  `;
+
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ error: 'Database query error' });
+    }
+
+    // Prepare the candidate's details along with all interview rounds
+    const candidate = {
+      Candidate_ID: results[0].Candidate_ID,
+      Candidate_Name: results[0].Candidate_Name,
+      Position: results[0].Position,
+      HR_Name: results[0].HR_Name,
+      interviewRounds: results.map(r => ({
+        Round_Number: r.Round_Number,
+        Interviewer: r.Interviewer,
+        Interview_Date: r.Interview_Date,
+        Status: r.Status,
+        Remarks: r.Remarks
+      }))
+    };
+
+    res.json(candidate);
+  });
+});
 
 // Start the server
 app.listen(port, () => {

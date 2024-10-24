@@ -9,5 +9,5 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },          // Route for login
     { path: 'hr-dashboard', component: HRComponent },      // Route for HR dashboard
     { path: 'ceo', component: CEOComponent },              // Route for CEO dashboard
-    { path: '**', redirectTo: 'login' }      
+    { path: '**', redirectTo: 'login' }        
 ];

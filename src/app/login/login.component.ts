@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent  {
+export class LoginComponent {
   name: string = '';
   password: string = '';
   errorMessage: string = '';
@@ -20,13 +20,19 @@ export class LoginComponent  {
 
   login() {
     const loginData = { name: this.name, password: this.password };
-  
+
     this.http.post<any>('http://localhost:3000/api/login', loginData).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
         localStorage.setItem('loggedInHR', response.user.name); // Save logged-in HR name to localStorage
         localStorage.setItem('loggedInHRId', response.user.u_id); // Save logged-in HR ID to localStorage
-        this.router.navigate(['/hr-dashboard']);  // Navigate to HR dashboard
+
+        // Redirect based on user name
+        if (this.name === 'Sushil') {
+          this.router.navigate(['/ceo']); // Redirect to CEO component
+        } else {
+          this.router.navigate(['/hr-dashboard']); // Redirect to HR dashboard for other users
+        }
       },
       error: (error) => {
         this.errorMessage = 'Invalid username or password';
@@ -34,5 +40,4 @@ export class LoginComponent  {
       }
     });
   }
-  
 }
