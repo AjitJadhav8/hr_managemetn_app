@@ -60,7 +60,7 @@ export class HRComponent implements OnInit {
           this.candidates = data.map(candidate => {
             return {
               ...candidate,
-              Interview_Date: this.formatLocalDate(candidate.Interview_Date) // Format date here
+              Interview_Date: candidate.Interview_Date ? this.formatLocalDate(candidate.Interview_Date) : 'N/A' // Set to 'N/A' if date is not present
             };
           });
           console.log('Fetched candidates:', this.candidates);

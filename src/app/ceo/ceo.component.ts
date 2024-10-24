@@ -35,7 +35,6 @@ export class CEOComponent implements OnInit {
   }
 
   getDistinctCandidates(data: any[]) {
-    // Use a map to track unique candidates by c_id
     const distinctCandidates = new Map();
     data.forEach(candidate => {
       if (!distinctCandidates.has(candidate.Candidate_ID)) {
@@ -49,7 +48,7 @@ export class CEOComponent implements OnInit {
     this.http.get<any>(`http://localhost:3000/api/candidates/${candidate.Candidate_ID}/details`)
       .subscribe(
         data => {
-          this.selectedCandidate = data;
+          this.selectedCandidate = this.formatCandidateDetails(data);
         },
         error => {
           console.error('Error fetching candidate details:', error);
@@ -59,5 +58,20 @@ export class CEOComponent implements OnInit {
 
   closeModal() {
     this.selectedCandidate = null;
+  }
+
+  formatCandidateDetails(data: any) {
+    if (data.interviewRounds) {
+      data.interviewRounds.forEach((round: { Interview_Date: string; }) => {
+        round.Interview_Date = this.formatDate(round.Interview_Date);
+      });
+    }
+    return data;
+  }
+
+  formatDate(dateString: string): string {
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' } as const;
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB', options); // 'en-GB' gives dd-mm-yyyy format
   }
 }

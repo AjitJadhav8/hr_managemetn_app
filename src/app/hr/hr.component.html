@@ -42,7 +42,7 @@
       <td>{{ candidate.Position }}</td>
       <td>{{ candidate.Round_Number || 'N/A' }}</td>
       <td>{{ candidate.Interviewer || 'N/A' }}</td>
-      <td>{{ candidate.Interview_Date || 'N/A' }}</td>
+      <td>{{ candidate.Interview_Date ? candidate.Interview_Date : 'N/A' }}</td>
       <td>{{ candidate.Status || 'N/A' }}</td>
       <td>{{ candidate.Remarks || 'N/A' }}</td>
       <td>
