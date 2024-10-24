@@ -34,7 +34,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let candidate of candidates" (click)="selectCandidate(candidate)">
+    <tr *ngFor="let candidate of candidates">
       <td>{{ candidate.Candidate_Name }}</td>
       <td>{{ candidate.Position }}</td>
       <td>{{ candidate.Round_Number || 'N/A' }}</td>
@@ -43,11 +43,13 @@
       <td>{{ candidate.Status || 'N/A' }}</td>
       <td>{{ candidate.Remarks || 'N/A' }}</td>
       <td>
+        <button (click)="selectCandidate(candidate); $event.stopPropagation()">Select</button>
         <button (click)="deleteCandidate(candidate.Candidate_ID); $event.stopPropagation()">Delete</button>
       </td>
     </tr>
   </tbody>
 </table>
+
 
 <hr>
 
