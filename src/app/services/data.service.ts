@@ -21,7 +21,7 @@ export class DataService {
   }
 
 
-    // Login method
+    // Login method 
     login(credentials: { name: string; password: string }): Observable<any> {
       return this.http.post<any>(`${this.apiUrl}/api/login`, credentials);
     }
