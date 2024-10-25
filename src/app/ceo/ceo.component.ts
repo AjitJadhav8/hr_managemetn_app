@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-ceo',
@@ -14,24 +15,23 @@ export class CEOComponent implements OnInit {
   candidates: any[] = [];
   selectedCandidate: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private dataService: DataService) {}
 
   ngOnInit(): void {
     this.getAllCandidates();
   }
 
   getAllCandidates() {
-    this.http.get<any[]>('http://localhost:3000/api/all-candidates')
-      .subscribe(
-        data => {
-          // Filter for distinct candidates using the c_id to avoid duplicates
-          this.candidates = this.getDistinctCandidates(data);
-          console.log('Filtered candidates:', this.candidates);
-        },
-        error => {
-          console.error('Error fetching candidates:', error);
-        }
-      );
+    this.dataService.getAllCandidates().subscribe(
+      data => {
+        // Filter for distinct candidates using the Candidate_ID to avoid duplicates
+        this.candidates = this.getDistinctCandidates(data);
+        console.log('Filtered candidates:', this.candidates);
+      },
+      error => {
+        console.error('Error fetching candidates:', error);
+      }
+    );
   }
 
   getDistinctCandidates(data: any[]) {
@@ -45,15 +45,14 @@ export class CEOComponent implements OnInit {
   }
 
   openModal(candidate: any) {
-    this.http.get<any>(`http://localhost:3000/api/candidates/${candidate.Candidate_ID}/details`)
-      .subscribe(
-        data => {
-          this.selectedCandidate = this.formatCandidateDetails(data);
-        },
-        error => {
-          console.error('Error fetching candidate details:', error);
-        }
-      );
+    this.dataService.getCandidateDetails(candidate.Candidate_ID).subscribe(
+      data => {
+        this.selectedCandidate = this.formatCandidateDetails(data);
+      },
+      error => {
+        console.error('Error fetching candidate details:', error);
+      }
+    );
   }
 
   closeModal() {

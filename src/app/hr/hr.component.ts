@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-hr',
@@ -37,7 +38,7 @@ export class HRComponent implements OnInit {
 
   selectedCandidate: any = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private dataService: DataService) {}
 
   ngOnInit(): void {
     this.loggedInHR = localStorage.getItem('loggedInHR') || '';
@@ -61,8 +62,7 @@ export class HRComponent implements OnInit {
 
   getCandidates() {
     console.log('Fetching candidates for HR ID:', this.loggedInHRId);
-    this.http
-      .get<any[]>(`http://localhost:3000/api/candidates?u_id=${this.loggedInHRId}`)
+    this.dataService.getCandidates(this.loggedInHRId)
       .subscribe(
         (data) => {
           this.candidates = data.map(candidate => {
@@ -86,7 +86,7 @@ export class HRComponent implements OnInit {
       u_id: this.loggedInHRId
     };
 
-    this.http.post('http://localhost:3000/api/candidates', candidateData)
+    this.dataService.addNewCandidate(candidateData)
       .subscribe(
         response => {
           this.getCandidates(); // Refresh candidate list
@@ -97,46 +97,28 @@ export class HRComponent implements OnInit {
         }
       );
   }
+
   
 
-// addNewRound() {
-//   const roundData = {
-//     ...this.newRound,
-//     interview_date: this.formatLocalDate(this.newRound.interview_date), // Correct date handling
-//     c_id: this.selectedCandidate.Candidate_ID
-//   };
+  addNewRound() {
+    const roundData = {
+      ...this.newRound,
+      interview_date: this.formatLocalDate(this.newRound.interview_date), // Correct date handling
+      c_id: this.selectedCandidate.Candidate_ID,
+      status: this.newRound.status === 'Custom' ? this.newRound.customStatus : this.newRound.status // Use custom status if selected
+    };
 
-//   this.http.post(`http://localhost:3000/api/candidates/${this.selectedCandidate.Candidate_ID}/interview-rounds`, roundData)
-//     .subscribe(
-//       () => {
-//         this.getCandidates(); // Refresh candidate list
-//         this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '' }; // Reset form
-//       },
-//       error => {
-//         console.error('Error adding round:', error);
-//       }
-//     );
-// }
-
-addNewRound() {
-  const roundData = {
-    ...this.newRound,
-    interview_date: this.formatLocalDate(this.newRound.interview_date), // Correct date handling
-    c_id: this.selectedCandidate.Candidate_ID,
-    status: this.newRound.status === 'Custom' ? this.newRound.customStatus : this.newRound.status // Use custom status if selected
-  };
-
-  this.http.post(`http://localhost:3000/api/candidates/${this.selectedCandidate.Candidate_ID}/interview-rounds`, roundData)
-    .subscribe(
-      () => {
-        this.getCandidates(); // Refresh candidate list
-        this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '', customStatus: '' }; // Reset form
-      },
-      error => {
-        console.error('Error adding round:', error);
-      }
-    );
-}
+    this.dataService.addNewRound(this.selectedCandidate.Candidate_ID, roundData)
+      .subscribe(
+        () => {
+          this.getCandidates(); // Refresh candidate list
+          this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '', customStatus: '' }; // Reset form
+        },
+        error => {
+          console.error('Error adding round:', error);
+        }
+      );
+  }
 
 
   selectCandidate(candidate: any) {
@@ -155,11 +137,10 @@ addNewRound() {
   }
 
   deleteInterviewRound(candidateId: number, roundNumber: string, candidateName: string) {
-    // Show confirmation dialog
     const confirmDelete = confirm(`Are you sure you want to delete interview round ${roundNumber} for ${candidateName}?`);
     
     if (confirmDelete) {
-      this.http.delete(`http://localhost:3000/api/candidates/${candidateId}/interview-rounds/${roundNumber}`)
+      this.dataService.deleteInterviewRound(candidateId, roundNumber)
         .subscribe(
           (response) => {
             console.log('Interview round deleted:', response);
@@ -173,15 +154,16 @@ addNewRound() {
       console.log('Delete operation was canceled.');
     }
   }
+
   
   updateCandidate() {
     if (this.selectedCandidate) {
       const updatedCandidate = {
-        name: this.selectedCandidate.Candidate_Name, // The updated name from the form
-        position: this.selectedCandidate.Position    // The updated position from the form
+        name: this.selectedCandidate.Candidate_Name,
+        position: this.selectedCandidate.Position
       };
-  
-      this.http.put(`http://localhost:3000/api/candidates/${this.selectedCandidate.Candidate_ID}`, updatedCandidate)
+
+      this.dataService.updateCandidate(this.selectedCandidate.Candidate_ID, updatedCandidate)
         .subscribe(
           (response) => {
             console.log('Candidate updated:', response);
