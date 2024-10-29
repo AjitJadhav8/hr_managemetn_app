@@ -61,6 +61,34 @@ p {
   color: #555;
 }
 
+
+/* Add New Interview Round Form Styling */
+.add-round-container {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px auto;
+  width: 60%;
+  max-width: 500px;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Update Candidate Form Styling */
+.update-candidate-container {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px auto;
+  width: 60%;
+  max-width: 500px;
+  transition: box-shadow 0.3s ease;
+}
+
+
 /* Add New Candidate Section */
 .add-candidate-container {
   max-width: 600px;
