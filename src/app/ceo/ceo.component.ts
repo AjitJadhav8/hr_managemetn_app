@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../services/data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ceo',
@@ -14,8 +15,10 @@ import { DataService } from '../services/data.service';
 export class CEOComponent implements OnInit {
   candidates: any[] = [];
   selectedCandidate: any = null;
+  loggedInHR: string = '';
 
-  constructor(private http: HttpClient,private dataService: DataService) {}
+
+  constructor(private http: HttpClient, private router: Router,private dataService: DataService) {}
 
   ngOnInit(): void {
     this.getAllCandidates();
@@ -73,4 +76,14 @@ export class CEOComponent implements OnInit {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', options); // 'en-GB' gives dd-mm-yyyy format
   }
+
+  logout(){
+    localStorage.removeItem('loggedInHR');
+    localStorage.removeItem('loggedInHRId');
+    console.log('Logged out successfully.');
+    
+    // Navigate to login page
+    this.router.navigate(['/login']); // Redirect to HR dashboard for other users
+  }
+
 }

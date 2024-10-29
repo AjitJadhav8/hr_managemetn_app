@@ -11,6 +11,49 @@
   padding: 0; /* Adjust as needed */
 }
 
+
+/* Navbar Main Styling */
+.navbar-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  background-color: white; /* White background */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for contrast */
+}
+
+.navbar-logo {
+  height: 40px;
+}
+
+.navbar-center {
+  font-size: 24px;
+  font-weight: bold;
+  color: #026faa;
+  flex-grow: 1;
+  text-align: center; /* Center text */
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logout-button {
+  background-color: #026faa;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #003f73;
+}
+
+
 h1, h2 {
   color: #333;
   margin-bottom: 15px;
@@ -88,28 +131,34 @@ button:hover {
 }
 
 /* Navbar Styling */
+/* Center Navbar */
 .navbar {
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  margin-top: 10px;
   margin-bottom: 20px;
+  gap: 10px; /* Add spacing between buttons */
 }
 
+/* Button styling for active state */
 .navbar button {
   background-color: #026faa;
   border: none;
   color: white;
   padding: 10px 15px;
-  margin-right: 10px;
   cursor: pointer;
   border-radius: 4px;
   font-size: 16px;
 }
 
 .navbar button.active {
-  background-color: #026faa;
+  background-color: #005f8c; /* Different shade for active button */
 }
 
 .navbar button:hover {
-  background-color: #026faa;
+  background-color: #005f8c; /* Hover effect */
 }
+
 
 /* Table Styling */
 table {

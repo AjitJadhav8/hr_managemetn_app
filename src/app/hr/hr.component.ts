@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../services/data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-hr',
@@ -38,7 +39,7 @@ export class HRComponent implements OnInit {
 
   selectedCandidate: any = null;
 
-  constructor(private http: HttpClient,private dataService: DataService) {}
+  constructor(private http: HttpClient, private router: Router,private dataService: DataService) {}
 
   ngOnInit(): void {
     this.loggedInHR = localStorage.getItem('loggedInHR') || '';
@@ -52,6 +53,7 @@ export class HRComponent implements OnInit {
       console.error('No HR is logged in!');
     }
   }
+
 
 
 
@@ -215,6 +217,15 @@ export class HRComponent implements OnInit {
     }
   }
   
+  logout(){
+    localStorage.removeItem('loggedInHR');
+    localStorage.removeItem('loggedInHRId');
+    console.log('Logged out successfully.');
+    
+    // Navigate to login page
+    this.router.navigate(['/login']); // Redirect to HR dashboard for other users
+  }
+
 
   resetForm() {
     this.newRound = {
@@ -226,4 +237,51 @@ export class HRComponent implements OnInit {
     };
     this.selectedCandidate = null;
   }
+
+// In hr.component.ts
+currentPassword: string = '';
+newPassword: string = '';
+confirmPassword: string = '';
+showChangePasswordForm: boolean = false;
+
+// Other methods...
+
+changePassword() {
+  if (this.newPassword !== this.confirmPassword) {
+    alert("New passwords do not match!");
+    return;
+  }
+
+  // Ensure loggedInHRId is a string
+  if (!this.loggedInHRId) {
+    alert("User ID is not valid.");
+    return;
+  }
+
+  // Create changePasswordData without userId
+  const changePasswordData = {
+    currentPassword: this.currentPassword,
+    newPassword: this.newPassword
+  };
+
+  // Call the dataService with both userId and changePasswordData
+  this.dataService.changePassword(this.loggedInHRId as string, changePasswordData).subscribe(
+    (response) => {
+      alert("Password changed successfully!");
+      this.showChangePasswordForm = false;
+      this.resetChangePasswordForm();
+    },
+    (error) => {
+      console.error('Error changing password:', error);
+      alert("Failed to change password: " + (error.error?.message || "Unknown error"));
+    }
+  );
+}
+
+
+resetChangePasswordForm() {
+  this.currentPassword = '';
+  this.newPassword = '';
+  this.confirmPassword = '';
+}
 }

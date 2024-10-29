@@ -1,21 +1,31 @@
+<div class="navbar-main">
+  <img src="credenca-logo.png" alt="Logo" class="navbar-logo" />
+  <p class="navbar-center">CEO Dashboard</p>
+  <div class="navbar-right">
+    <button class="logout-button" (click)="logout()">Logout</button>
+  </div>
+</div>
+ 
 <div>
-  <h2>All Candidates</h2>
-  <table class="candidate-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Position</th>
-        <th>HR Name</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let candidate of candidates" (click)="openModal(candidate)">
-        <td>{{ candidate.Candidate_Name }}</td>
-        <td>{{ candidate.Position }}</td>
-        <td>{{ candidate.HR_Name }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table class="candidate-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Position</th>
+          <th>HR Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let candidate of candidates" (click)="openModal(candidate)">
+          <td>{{ candidate.Candidate_Name }}</td>
+          <td>{{ candidate.Position }}</td>
+          <td>{{ candidate.HR_Name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
 
   <!-- Modal -->
   <div class="modal" *ngIf="selectedCandidate">

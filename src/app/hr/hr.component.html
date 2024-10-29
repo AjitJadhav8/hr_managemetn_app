@@ -1,7 +1,40 @@
+<div class="navbar-main">
+  <img src="credenca-logo.png" alt="Logo" class="navbar-logo" />
+  <p class="navbar-center">HR Dashboard</p>
+  <div class="navbar-right">
+    <p>Welcome, {{ loggedInHR }}</p>
+    <button class="logout-button" (click)="logout()">Logout</button>
+    <button class="change-password-button" (click)="showChangePasswordForm = !showChangePasswordForm">Change Password</button>
+
+  </div>
+</div>
+
+<!-- hr.component.html -->
+<div *ngIf="showChangePasswordForm" class="change-password-form">
+  <h3>Change Password</h3>
+  <form (ngSubmit)="changePassword()">
+    <div>
+      <label for="currentPassword">Current Password:</label>
+      <input type="password" id="currentPassword" [(ngModel)]="currentPassword" name="currentPassword" required />
+    </div>
+    <div>
+      <label for="newPassword">New Password:</label>
+      <input type="password" id="newPassword" [(ngModel)]="newPassword" name="newPassword" required />
+    </div>
+    <div>
+      <label for="confirmPassword">Confirm New Password:</label>
+      <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required />
+    </div>
+    <button type="submit">Change Password</button>
+  </form>
+</div>
+
+
+
 <div class="container">
   <!-- Header Section -->
-  <h1>HR Dashboard</h1>
-  <p>Welcome, {{ loggedInHR }}</p>
+  <!-- <h1>HR Dashboard</h1>
+  <p>Welcome, {{ loggedInHR }}</p> -->
 
   <!-- Navigation Bar -->
   <nav class="navbar">

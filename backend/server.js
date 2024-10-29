@@ -315,6 +315,45 @@ app.get('/api/candidates/:id/details', (req, res) => {
   });
 });
 
+
+
+// Change password route
+// Change Password Route
+app.put('/api/change-password', (req, res) => {
+  const { userId, currentPassword, newPassword } = req.body;
+
+  if (!userId || !currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  // Check if the user exists and if the current password is correct
+  const query = 'SELECT * FROM users WHERE u_id = ? AND password = ?';
+  db.query(query, [userId, currentPassword], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ error: 'Invalid current password' });
+    }
+
+    // Update the password
+    const updateQuery = 'UPDATE users SET password = ? WHERE u_id = ?';
+    db.query(updateQuery, [newPassword, userId], (err, result) => {
+      if (err) {
+        console.error('Error updating password:', err);
+        return res.status(500).json({ error: 'Failed to update password' });
+      }
+
+      res.json({ message: 'Password changed successfully' });
+    });
+  });
+});
+
+
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
