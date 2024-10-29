@@ -1,8 +1,14 @@
 /* General Styles */
 :host {
   font-family: Arial, sans-serif;
-  margin: 20px;
-  background-color: #f4f4f4;
+  margin: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-color: rgba(240, 240, 240, 0.9);
+  color: #333;
+  padding: 0; /* Adjust as needed */
 }
 
 h1, h2 {
@@ -12,6 +18,26 @@ h1, h2 {
 
 p {
   color: #555;
+}
+
+/* Add New Candidate Section */
+.add-candidate-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Candidate List Container */
+.candidate-list-container {
+  max-width: 1500px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Form Styling */
@@ -41,8 +67,14 @@ input, textarea {
   border-radius: 4px;
 }
 
+textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+/* Button Styling */
 button {
-  background-color: #28a745;
+  background-color: #026faa;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -52,7 +84,31 @@ button {
 }
 
 button:hover {
-  background-color: #218838;
+  background-color: #003f73;
+}
+
+/* Navbar Styling */
+.navbar {
+  margin-bottom: 20px;
+}
+
+.navbar button {
+  background-color: #026faa;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.navbar button.active {
+  background-color: #026faa;
+}
+
+.navbar button:hover {
+  background-color: #026faa;
 }
 
 /* Table Styling */
@@ -82,9 +138,14 @@ tbody td {
   border: 1px solid #ddd;
 }
 
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Button Styling for Actions */
 td button {
   margin-right: 10px;
-  background-color: #007bff;
+  background-color: #026faa;
   border: none;
   color: white;
   padding: 8px 12px;
@@ -94,7 +155,7 @@ td button {
 }
 
 td button:hover {
-  background-color: #0056b3;
+  background-color: #003f73;
 }
 
 button.delete {
@@ -105,21 +166,24 @@ button.delete:hover {
   background-color: #c82333;
 }
 
-/* Interview Round Form */
-div[ngIf="selectedCandidate"] {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+/* Selected Candidate Options */
+/* Button styling for actions in the selected candidate section */
+.selected-candidate-actions button {
+  background-color: #026faa; /* Blue background */
+  border: none; /* Remove border */
+  color: white; /* White text color */
+  padding: 10px 15px; /* Button padding */
+  margin-right: 10px; /* Space between buttons */
+  cursor: pointer; /* Pointer cursor */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 16px; /* Button font size */
 }
 
-textarea {
-  height: 80px;
-  resize: vertical;
+.selected-candidate-actions button:hover {
+  background-color: #003f73; /* Darker blue on hover */
 }
 
-/* Responsive Design */
+/* Responsive Styles */
 @media (max-width: 768px) {
   input, textarea, button {
     font-size: 12px;

@@ -54,6 +54,43 @@ export class HRComponent implements OnInit {
   }
 
 
+
+  currentSection: string = 'addCandidate'; // Show Add Candidate section by default
+
+  showSection(section: string) {
+    this.currentSection = section;
+  }
+
+  showAddRound: boolean = false;  // New property to control Add Round section visibility
+  showUpdateCandidate: boolean = false; 
+
+  selectCandidate(candidate: any) {
+    this.selectedCandidate = candidate;
+    this.newRound = {
+      round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1',
+      interviewer: candidate.Interviewer || '',
+      interview_date: candidate.Interview_Date || '',
+      status: candidate.Status || '',
+      remarks: candidate.Remarks || ''
+    };
+
+    // Reset the visibility flags
+    this.showAddRound = false;
+    this.showUpdateCandidate = false;
+  }
+
+  showAddRoundSection() {
+    this.showAddRound = true;
+    this.showUpdateCandidate = false; // Hide update section
+  }
+
+  showUpdateCandidateSection() {
+    this.showUpdateCandidate = true;
+    this.showAddRound = false; // Hide add round section
+  }
+
+
+
   formatLocalDate(dateString: string): string {
     const date = new Date(dateString);
     const userTimezoneOffset = date.getTimezoneOffset() * 60000; // Get the timezone offset in milliseconds
@@ -121,20 +158,20 @@ export class HRComponent implements OnInit {
   }
 
 
-  selectCandidate(candidate: any) {
-    this.selectedCandidate = candidate;
+  // selectCandidate(candidate: any) {
+  //   this.selectedCandidate = candidate;
   
-    // Set the candidateId from the selected candidate
+  //   // Set the candidateId from the selected candidate
     
-    // Update the form with selected candidate details
-    this.newRound = {
-      round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1', // Default to '1' if NaN
-      interviewer: candidate.Interviewer || '',
-      interview_date: candidate.Interview_Date || '', // Ensure this is in the correct format
-      status: candidate.Status || '',
-      remarks: candidate.Remarks || ''
-    };
-  }
+  //   // Update the form with selected candidate details
+  //   this.newRound = {
+  //     round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1', // Default to '1' if NaN
+  //     interviewer: candidate.Interviewer || '',
+  //     interview_date: candidate.Interview_Date || '', // Ensure this is in the correct format
+  //     status: candidate.Status || '',
+  //     remarks: candidate.Remarks || ''
+  //   };
+  // }
 
   deleteInterviewRound(candidateId: number, roundNumber: string, candidateName: string) {
     const confirmDelete = confirm(`Are you sure you want to delete interview round ${roundNumber} for ${candidateName}?`);
