@@ -178,6 +178,59 @@
   background-color: #f2f2f2;
 }
 
+/* Change Password Form Styling */
+.change-password-form {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px auto;
+  width: 60%;
+  max-width: 500px;
+  transition: box-shadow 0.3s ease;
+}
+
+.change-password-form h3 {
+  color: #3498db;
+  margin-bottom: 15px;
+}
+
+.change-password-form label {
+  font-weight: bold;
+  color: #333;
+}
+
+.change-password-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.change-password-form input[type="password"]:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+.change-password-form button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.change-password-form button:hover {
+  background-color: #2980b9;
+}
+
 /* General Styling */
 h2 {
   color: #3498db;
@@ -223,5 +276,10 @@ h2 {
 
   .candidate-table tbody tr {
     margin-bottom: 15px;
+  }
+
+  .change-password-form {
+    width: 90%;
+    margin: 10px auto;
   }
 }

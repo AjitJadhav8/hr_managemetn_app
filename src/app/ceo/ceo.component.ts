@@ -86,4 +86,51 @@ export class CEOComponent implements OnInit {
     this.router.navigate(['/login']); // Redirect to HR dashboard for other users
   }
 
+  
+  currentPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
+  showChangePasswordForm: boolean = false;
+
+
+  changePassword() {
+    if (this.newPassword !== this.confirmPassword) {
+      alert("New passwords do not match!");
+      return;
+    }
+
+    const loggedInHRId = localStorage.getItem('loggedInHRId');
+    if (!loggedInHRId) {
+      alert("User ID is not valid.");
+      return;
+    }
+
+    const changePasswordData = {
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword
+    };
+
+    this.dataService.changePassword(loggedInHRId, changePasswordData).subscribe(
+      (response) => {
+        alert("Password changed successfully!");
+        this.showChangePasswordForm = false;
+        this.resetChangePasswordForm();
+      },
+      (error) => {
+        console.error('Error changing password:', error);
+        alert("Failed to change password: " + (error.error?.message || "Unknown error"));
+      }
+    );
+  }
+
+  resetChangePasswordForm() {
+    this.currentPassword = '';
+    this.newPassword = '';
+    this.confirmPassword = '';
+  }
+
+
+
+
+
 }

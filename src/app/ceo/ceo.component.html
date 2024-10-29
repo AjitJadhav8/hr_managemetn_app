@@ -3,9 +3,48 @@
   <p class="navbar-center">CEO Dashboard</p>
   <div class="navbar-right">
     <button class="logout-button" (click)="logout()">Logout</button>
+    <button class="logout-button" (click)="showChangePasswordForm = !showChangePasswordForm">Change Password</button>
+
   </div>
 </div>
  
+
+
+
+<div>
+  <div *ngIf="showChangePasswordForm" class="change-password-form">
+    <h3>Change Password</h3>
+    <form (ngSubmit)="changePassword()">
+      <div>
+        <label for="currentPassword">Current Password:</label>
+        <input type="password" id="currentPassword" [(ngModel)]="currentPassword" name="currentPassword" required />
+      </div>
+      <div>
+        <label for="newPassword">New Password:</label>
+        <input type="password" id="newPassword" [(ngModel)]="newPassword" name="newPassword" required />
+      </div>
+      <div>
+        <label for="confirmPassword">Confirm New Password:</label>
+        <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required />
+      </div>
+      <button type="submit">Change Password</button>
+    </form>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div>
   <div class="table-container">
     <table class="candidate-table">
