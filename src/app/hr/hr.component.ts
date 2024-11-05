@@ -68,23 +68,31 @@ export class HRComponent implements OnInit {
 
   selectCandidate(candidate: any) {
     this.selectedCandidate = candidate;
-    this.newRound = {
-      round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1',
-      interviewer: candidate.Interviewer || '',
-      interview_date: candidate.Interview_Date || '',
-      status: candidate.Status || '',
-      remarks: candidate.Remarks || ''
-    };
+    // this.newRound = {
+    //   round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1',
+    //   interviewer: candidate.Interviewer || '',
+    //   interview_date: candidate.Interview_Date || '',
+    //   status: candidate.Status || '',
+    //   remarks: candidate.Remarks || ''
+    // };
 
     // Reset the visibility flags
     this.showAddRound = false;
     this.showUpdateCandidate = false;
   }
 
-  showAddRoundSection() {
-    this.showAddRound = true;
-    this.showUpdateCandidate = false; // Hide update section
+  showAddRoundSection(candidate: any) {
+    this.selectedCandidate = candidate; // Set the selected candidate for the add round form
+    this.newRound = {
+      round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1',
+      interviewer: '', // You can initialize as empty or set default if required
+      interview_date: '', // You can initialize as empty or set default if required
+      status: '', // Initialize as empty for now
+      remarks: '' // Initialize as empty for now
+    };
+    this.showAddRound = true; // Show the add round form directly
   }
+  
 
   showUpdateCandidateSection() {
     this.showUpdateCandidate = true;

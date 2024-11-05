@@ -51,12 +51,10 @@ export class DataService {
     return this.http.put<any>(`${this.apiUrl}/api/candidates/${candidateId}`, updatedCandidate);
   }
 
-
 // data.service.ts
 changePassword(userId: string, changePasswordData: { currentPassword: string; newPassword: string }): Observable<any> {
   return this.http.put<any>(`${this.apiUrl}/api/change-password`, { userId, ...changePasswordData });
 }
-
 
 
 getInterviewRounds(candidateId: number): Observable<any[]> {
@@ -64,4 +62,4 @@ getInterviewRounds(candidateId: number): Observable<any[]> {
 }
 
 
-  }
+}

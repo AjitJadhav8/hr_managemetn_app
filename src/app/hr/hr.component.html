@@ -87,7 +87,8 @@
         <td>{{ candidate.Remarks || 'N/A' }}</td>
         <td>
           <button (click)="selectCandidate(candidate); $event.stopPropagation()">Select</button>
-          <button (click)="deleteInterviewRound(candidate.Candidate_ID, candidate.Round_Number, candidate.Candidate_Name)">Delete Round</button>
+          <button (click)="showAddRoundSection(candidate)">Add Interview Round</button>
+
         </td>
       </tr>
     </tbody>
@@ -98,11 +99,11 @@
 </div>
 <div *ngIf="selectedCandidate" class="selected-candidate-actions">
   <h3>Actions for {{ selectedCandidate.Candidate_Name }}</h3>
-  <button (click)="showAddRoundSection()">Add Interview Round</button>
   <button (click)="showUpdateCandidateSection()">Update Candidate</button>
-
   <button (click)="showHistorySection()">View History</button>
-
+  <button (click)="deleteInterviewRound(selectedCandidate.Candidate_ID, selectedCandidate.Round_Number, selectedCandidate.Candidate_Name)">
+    Delete Round
+  </button>
 
 </div>
 
