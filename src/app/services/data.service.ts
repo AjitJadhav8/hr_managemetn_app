@@ -58,4 +58,10 @@ changePassword(userId: string, changePasswordData: { currentPassword: string; ne
 }
 
 
+
+getInterviewRounds(candidateId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/api/interview_rounds/${candidateId}`);
+}
+
+
   }

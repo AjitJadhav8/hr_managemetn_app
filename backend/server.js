@@ -24,13 +24,14 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Get all candidates with interview rounds
-app.get('/api/candidates', (req, res) => {
-    const { u_id } = req.query;
-    if (!u_id) {
-        return res.status(400).json({ error: 'HR user ID is required' });
-    }
+// app.get('/api/candidates', (req, res) => {
+//     const { u_id } = req.query;
+//     if (!u_id) {
+//         return res.status(400).json({ error: 'HR user ID is required' });
+//     }
 
-//     SELECT 
+
+//     const query = `SELECT 
 //     c.c_id AS Candidate_ID,
 //     c.c_name AS Candidate_Name,
 //     c.position AS Position,
@@ -41,38 +42,64 @@ app.get('/api/candidates', (req, res) => {
 //     ir.remarks AS Remarks
 // FROM 
 //     candidates c
-// INNER JOIN 
+// LEFT JOIN 
 //     interview_rounds ir ON c.c_id = ir.c_id
 // WHERE 
 //     c.u_id = ?
 // ORDER BY 
-//     c.c_id, ir.round_number
-    const query = `SELECT 
-    c.c_id AS Candidate_ID,
-    c.c_name AS Candidate_Name,
-    c.position AS Position,
-    ir.round_number AS Round_Number,
-    ir.interviewer AS Interviewer,
-    ir.interview_date AS Interview_Date,
-    ir.status AS Status,
-    ir.remarks AS Remarks
-FROM 
-    candidates c
-LEFT JOIN 
-    interview_rounds ir ON c.c_id = ir.c_id
-WHERE 
-    c.u_id = ?
-ORDER BY 
-    c.c_id, ir.round_number;`;
+//     c.c_id, ir.round_number;`;
 
-    db.query(query, [u_id], (err, results) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ error: 'Database query error' });
-        }
-        console.log('Query results:', results); // Log results to see what's being returned
-        res.json(results);
-    });
+//     db.query(query, [u_id], (err, results) => {
+//         if (err) {
+//             console.error('Database query error:', err);
+//             return res.status(500).json({ error: 'Database query error' });
+//         }
+//         console.log('Query results:', results); // Log results to see what's being returned
+//         res.json(results);
+//     });
+// });
+app.get('/api/candidates', (req, res) => {
+  const { u_id } = req.query;
+  if (!u_id) {
+      return res.status(400).json({ error: 'HR user ID is required' });
+  }
+
+  const query = `
+  SELECT 
+      c.c_id AS Candidate_ID,
+      c.c_name AS Candidate_Name,
+      c.position AS Position,
+      ir.round_number AS Round_Number,
+      ir.interviewer AS Interviewer,
+      ir.interview_date AS Interview_Date,
+      ir.status AS Status,
+      ir.remarks AS Remarks
+  FROM 
+      candidates c
+  LEFT JOIN 
+      interview_rounds ir 
+  ON 
+      c.c_id = ir.c_id
+  AND 
+      ir.round_number = (
+          SELECT MAX(sub_ir.round_number)
+          FROM interview_rounds sub_ir
+          WHERE sub_ir.c_id = c.c_id
+      )
+  WHERE 
+      c.u_id = ?
+  ORDER BY 
+      c.c_id;
+  `;
+
+  db.query(query, [u_id], (err, results) => {
+      if (err) {
+          console.error('Database query error:', err);
+          return res.status(500).json({ error: 'Database query error' });
+      }
+      console.log('Query results:', results); // Log results to see what's being returned
+      res.json(results);
+  });
 });
 
   
@@ -350,6 +377,33 @@ app.put('/api/change-password', (req, res) => {
     });
   });
 });
+
+
+
+app.get('/api/interview_rounds/:c_id', (req, res) => {
+  const { c_id } = req.params;
+  console.log("Received request for interview rounds with candidate ID:", c_id);
+
+  const query = `SELECT 
+      round_number AS Round_Number,
+      interviewer AS Interviewer,
+      interview_date AS Interview_Date,
+      status AS Status,
+      remarks AS Remarks
+    FROM interview_rounds
+    WHERE c_id = ?
+    ORDER BY round_number;`;
+
+  db.query(query, [c_id], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ error: 'Database query error' });
+    }
+    console.log("Fetched interview rounds:", results);
+    res.json(results); // Ensure JSON data is returned
+  });
+});
+
 
 
 

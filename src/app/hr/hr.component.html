@@ -100,6 +100,10 @@
   <h3>Actions for {{ selectedCandidate.Candidate_Name }}</h3>
   <button (click)="showAddRoundSection()">Add Interview Round</button>
   <button (click)="showUpdateCandidateSection()">Update Candidate</button>
+
+  <button (click)="showHistorySection()">View History</button>
+
+
 </div>
 
 
@@ -160,4 +164,30 @@
 
     <button type="submit">Update Candidate</button>
   </form>
+</div>
+
+
+<!-- Interview History Section -->
+<div *ngIf="showHistory" class="history-section">
+  <h3>Interview History for {{ selectedCandidate.Candidate_Name }}</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Round Number</th>
+        <th>Interviewer</th>
+        <th>Interview Date</th>
+        <th>Status</th>
+        <th>Remarks</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let round of candidateHistory">
+        <td>{{ round.Round_Number }}</td>
+        <td>{{ round.Interviewer }}</td>
+        <td>{{ round.Interview_Date }}</td>
+        <td>{{ round.Status }}</td>
+        <td>{{ round.Remarks }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

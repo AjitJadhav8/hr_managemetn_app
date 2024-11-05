@@ -99,17 +99,40 @@ export class HRComponent implements OnInit {
     return new Date(date.getTime() - userTimezoneOffset).toISOString().split('T')[0];
   }
 
+  // getCandidates() {
+  //   console.log('Fetching candidates for HR ID:', this.loggedInHRId);
+  //   this.dataService.getCandidates(this.loggedInHRId)
+  //     .subscribe(
+  //       (data) => {
+  //         this.candidates = data.map(candidate => {
+  //           return {
+  //             ...candidate,
+  //             Interview_Date: candidate.Interview_Date ? this.formatLocalDate(candidate.Interview_Date) : 'N/A' // Set to 'N/A' if date is not present
+  //           };
+  //         });
+  //         console.log('Fetched candidates:', this.candidates);
+  //       },
+  //       (error) => {
+  //         console.error('There was an error fetching the candidates!', error.message || error);
+  //       }
+  //     );
+  // }
+
+
+
+
   getCandidates() {
     console.log('Fetching candidates for HR ID:', this.loggedInHRId);
+    
     this.dataService.getCandidates(this.loggedInHRId)
       .subscribe(
         (data) => {
-          this.candidates = data.map(candidate => {
-            return {
-              ...candidate,
-              Interview_Date: candidate.Interview_Date ? this.formatLocalDate(candidate.Interview_Date) : 'N/A' // Set to 'N/A' if date is not present
-            };
-          });
+          // Process candidates data to format the Interview_Date field
+          this.candidates = data.map(candidate => ({
+            ...candidate,
+            Interview_Date: candidate.Interview_Date ? this.formatLocalDate(candidate.Interview_Date) : 'N/A' // Set to 'N/A' if date is not present
+          }));
+          
           console.log('Fetched candidates:', this.candidates);
         },
         (error) => {
@@ -117,6 +140,18 @@ export class HRComponent implements OnInit {
         }
       );
   }
+  
+
+
+
+
+
+
+
+
+
+
+
 
   addNewCandidate() {
     const candidateData = {
@@ -284,4 +319,48 @@ resetChangePasswordForm() {
   this.newPassword = '';
   this.confirmPassword = '';
 }
+
+
+
+
+
+
+
+showHistory: boolean = false; // Control the visibility of the history section
+candidateHistory: any[] = []; // Holds the interview rounds history for the selected candidate
+
+showHistorySection() {
+  console.log("Showing history section for candidate:", this.selectedCandidate);
+  this.showHistory = true;
+  this.getCandidateHistory(this.selectedCandidate.Candidate_ID);
+}
+
+// Fetches all interview rounds for a selected candidate
+getCandidateHistory(candidateId: number) {
+  console.log("Fetching history for candidate ID:", candidateId);
+  this.dataService.getInterviewRounds(candidateId).subscribe(
+    (history) => {
+      console.log("Interview history fetched:", history);
+      this.candidateHistory = history.map(round => ({
+        ...round,
+        Interview_Date: round.Interview_Date ? this.formatLocalDate(round.Interview_Date) : 'N/A'
+      }));
+      console.log("Formatted candidate history:", this.candidateHistory);
+    },
+    (error) => {
+      console.error("Error fetching interview history:", error);
+    }
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
 }
