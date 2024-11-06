@@ -18,7 +18,6 @@ export class HRComponent implements OnInit {
   candidates: any[] = [];
 
   // Candidate form
-  newCandidate: { name: string, position: string } = { name: '', position: '' };
   
   // Interview round form
   newRound: {
@@ -52,6 +51,14 @@ export class HRComponent implements OnInit {
     } else {
       console.error('No HR is logged in!');
     }
+
+    // Fetch interview options for dropdowns
+  this.dataService.getInterviewOptions().subscribe((data) => {
+    this.interviewOptions = data;
+    console.log('Interview Options:', this.interviewOptions);
+  });
+
+
   }
 
 
@@ -152,34 +159,69 @@ export class HRComponent implements OnInit {
 
 
 
+  // addNewCandidate() {
+  //   const candidateData = {
+  //     name: this.newCandidate.name,
+  //     position: this.newCandidate.position,
+  //     u_id: this.loggedInHRId
+  //   };
+
+  //   this.dataService.addNewCandidate(candidateData)
+  //     .subscribe(
+  //       response => {
+  //         this.getCandidates(); // Refresh candidate list
+  //         this.newCandidate = { name: '', position: '' }; // Reset form
+  //       },
+  //       error => {
+  //         console.error('Error adding candidate:', error);
+  //       }
+  //     );
+  // }
 
 
-
-
-
-
-
-
+  newCandidate: { name: string, position: string | undefined, customPosition?: string } = { name: '', position: undefined, customPosition: '' };
 
   addNewCandidate() {
+    // If position is 'Custom', assign customPosition to position
+    if (this.isCustomPosition) {
+      this.newCandidate.position = this.newCandidate.customPosition || ''; // Ensure position is a string (use empty string if undefined)
+    }
+  
+    // Prepare the candidate data, making sure position is a valid string
     const candidateData = {
       name: this.newCandidate.name,
-      position: this.newCandidate.position,
+      position: this.newCandidate.position || '', // Provide an empty string if position is undefined
       u_id: this.loggedInHRId
     };
-
-    this.dataService.addNewCandidate(candidateData)
-      .subscribe(
-        response => {
-          this.getCandidates(); // Refresh candidate list
-          this.newCandidate = { name: '', position: '' }; // Reset form
-        },
-        error => {
-          console.error('Error adding candidate:', error);
-        }
-      );
+  
+    // Call the service to add the new candidate
+    this.dataService.addNewCandidate(candidateData).subscribe(
+      response => {
+        this.getCandidates(); // Refresh candidate list after adding
+        this.newCandidate = { name: '', position: '', customPosition: '' }; // Reset form
+        this.isCustomPosition = false; // Reset custom position flag
+      },
+      error => {
+        console.error('Error adding candidate:', error); // Log any error
+      }
+    );
   }
+  
 
+
+
+  interviewOptions: any = {
+    positions: [],
+    roundNumbers: [],
+    interviewers: [],
+    remarks: [],
+    statuses: [],
+  };
+  
+  selectedStatus: string = '';
+  isCustomStatus: boolean = false;  // Toggle for custom status input
+  selectedPosition: string = '';
+  isCustomPosition: boolean = false;  // Toggle for custom position input
   
 
   addNewRound() {

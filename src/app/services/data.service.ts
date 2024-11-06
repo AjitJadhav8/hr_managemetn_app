@@ -62,4 +62,9 @@ getInterviewRounds(candidateId: number): Observable<any[]> {
 }
 
 
+  // Method to get interview options (positions, round numbers, interviewers, remarks, and statuses)
+  getInterviewOptions(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/api/interview-options`);
+  }
+
 }

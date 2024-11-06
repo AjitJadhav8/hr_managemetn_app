@@ -23,6 +23,41 @@ db.connect((err) => {
 app.use(bodyParser.json());
 app.use(cors());
 
+
+
+
+
+// In your Node.js backend
+app.get('/api/interview-options', async (req, res) => {
+  try {
+    // Use db.promise().query() to support async/await
+    const [positions] = await db.promise().query("SELECT DISTINCT position FROM candidates");
+    const [roundNumbers] = await db.promise().query("SELECT DISTINCT round_number FROM interview_rounds");
+    const [interviewers] = await db.promise().query("SELECT DISTINCT interviewer FROM interview_rounds");
+    const [remarks] = await db.promise().query("SELECT DISTINCT remarks FROM interview_rounds WHERE remarks IS NOT NULL");
+    const [statuses] = await db.promise().query("SELECT DISTINCT status FROM interview_rounds");
+
+    res.json({
+      positions: positions.map(item => item.position),
+      roundNumbers: roundNumbers.map(item => item.round_number),
+      interviewers: interviewers.map(item => item.interviewer),
+      remarks: remarks.map(item => item.remarks),
+      statuses: statuses.map(item => item.status),
+    });
+  } catch (error) {
+    res.status(500).send("Error retrieving interview options");
+  }
+});
+
+
+
+
+
+
+
+
+
+
 // Get all candidates with interview rounds
 // app.get('/api/candidates', (req, res) => {
 //     const { u_id } = req.query;
@@ -105,20 +140,55 @@ app.get('/api/candidates', (req, res) => {
   
 
 // Add a new candidate (without interview rounds)
+// app.post('/api/candidates', (req, res) => {
+//   const { name, position, u_id } = req.body;
+
+//   if (!name || !position || !u_id) {
+//     return res.status(400).json({ error: 'All fields are required' });
+//   }
+
+//   const upperCaseName = name.toUpperCase();
+
+//   const addCandidateQuery = `
+//     INSERT INTO candidates (c_name, position, u_id) VALUES (?, ?, ?)
+//   `;
+
+//   db.query(addCandidateQuery, [upperCaseName, position, u_id], (err, result) => {
+//     if (err) {
+//       console.error('Error inserting candidate:', err);
+//       return res.status(500).json({ error: err.message || 'Database error' });
+//     }
+
+//     res.status(201).json({ message: 'Candidate added successfully', c_id: result.insertId });
+//   });
+// });
+
+
 app.post('/api/candidates', (req, res) => {
   const { name, position, u_id } = req.body;
 
+  // Ensure required fields are provided
   if (!name || !position || !u_id) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
+  // If position is 'Custom', handle the custom position
+  if (position === 'Custom' && !req.body.customPosition) {
+    return res.status(400).json({ error: 'Custom position is required' });
+  }
+
+  // If position is 'Custom', use the customPosition
+  const finalPosition = position === 'Custom' ? req.body.customPosition : position;
+
+  // Sanitize name (convert to uppercase, if required)
   const upperCaseName = name.toUpperCase();
 
+  // Insert the candidate into the database
   const addCandidateQuery = `
     INSERT INTO candidates (c_name, position, u_id) VALUES (?, ?, ?)
   `;
 
-  db.query(addCandidateQuery, [upperCaseName, position, u_id], (err, result) => {
+  db.query(addCandidateQuery, [upperCaseName, finalPosition, u_id], (err, result) => {
     if (err) {
       console.error('Error inserting candidate:', err);
       return res.status(500).json({ error: err.message || 'Database error' });
@@ -127,6 +197,11 @@ app.post('/api/candidates', (req, res) => {
     res.status(201).json({ message: 'Candidate added successfully', c_id: result.insertId });
   });
 });
+
+
+
+
+
 
 
 
@@ -403,6 +478,23 @@ app.get('/api/interview_rounds/:c_id', (req, res) => {
     res.json(results); // Ensure JSON data is returned
   });
 });
+
+
+
+
+
+
+
+// In your Node.js backend
+// Fetch distinct values for interview options
+
+
+
+
+
+
+
+
 
 
 

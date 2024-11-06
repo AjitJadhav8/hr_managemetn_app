@@ -5,7 +5,6 @@
     <p>Welcome, {{ loggedInHR }}</p>
     <button class="logout-button" (click)="logout()">Logout</button>
     <button class="change-password-button" (click)="showChangePasswordForm = !showChangePasswordForm">Change Password</button>
-
   </div>
 </div>
 
@@ -50,13 +49,25 @@
         <label for="name">Name:</label>
         <input [(ngModel)]="newCandidate.name" name="name" required>
       </div>
+  
       <div>
         <label for="position">Position:</label>
-        <input [(ngModel)]="newCandidate.position" name="position" required>
+        <select [(ngModel)]="newCandidate.position" name="position" (change)="isCustomPosition = newCandidate.position === 'Custom'" required>
+          <option value="" disabled>Select position</option>
+          <option *ngFor="let position of interviewOptions.positions" [value]="position">{{ position }}</option>
+          <option value="Custom">Custom</option>
+        </select>
       </div>
+  
+      <div *ngIf="isCustomPosition">
+        <label for="customPosition">Enter Custom Position:</label>
+        <input type="text" [(ngModel)]="newCandidate.customPosition" name="customPosition" placeholder="Type custom position here" />
+      </div>
+  
       <button type="submit">Add Candidate</button>
     </form>
   </div>
+  
 
 
   <!-- Candidate List Section -->
@@ -66,6 +77,7 @@
   <table>
     <thead>
       <tr>
+        <th>Serial No.</th> 
         <th>Name</th>
         <th>Position</th>
         <th>Round Number</th>
@@ -77,7 +89,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let candidate of candidates">
+      <tr *ngFor="let candidate of candidates; let i = index">
+        <td>{{i+1}}</td>
         <td>{{ candidate.Candidate_Name }}</td>
         <td>{{ candidate.Position }}</td>
         <td>{{ candidate.Round_Number || 'N/A' }}</td>
@@ -86,7 +99,7 @@
         <td>{{ candidate.Status || 'N/A' }}</td>
         <td>{{ candidate.Remarks || 'N/A' }}</td>
         <td>
-          <button (click)="selectCandidate(candidate); $event.stopPropagation()">Select</button>
+          <button (click)="selectCandidate(candidate); $event.stopPropagation()">...</button>
           <button (click)="showAddRoundSection(candidate)">Add Interview Round</button>
 
         </td>
