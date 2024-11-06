@@ -20,21 +20,7 @@ export class HRComponent implements OnInit {
   // Candidate form
   
   // Interview round form
-  newRound: {
-    round_number: string;
-    interviewer: string;
-    interview_date: string;
-    status: string;
-    remarks: string;
-    customStatus?: string; // Add customStatus as optional
-  } = {
-    round_number: '',
-    interviewer: '',
-    interview_date: '',
-    status: '',
-    remarks: '',
-    customStatus: '' // Initialize as an empty string
-  };
+
 
   selectedCandidate: any = null;
 
@@ -57,11 +43,17 @@ export class HRComponent implements OnInit {
     this.interviewOptions = data;
     console.log('Interview Options:', this.interviewOptions);
   });
+  this.getInterviewOptions();
 
 
   }
 
-
+  getInterviewOptions() {
+    this.dataService.getInterviewOptions().subscribe((data) => {
+      this.interviewOptions = data;
+      console.log('Interview Options:', this.interviewOptions);
+    });
+  }
 
 
   currentSection: string = 'addCandidate'; // Show Add Candidate section by default
@@ -87,6 +79,12 @@ export class HRComponent implements OnInit {
     this.showAddRound = false;
     this.showUpdateCandidate = false;
   }
+
+
+
+
+
+
 
   showAddRoundSection(candidate: any) {
     this.selectedCandidate = candidate; // Set the selected candidate for the add round form
@@ -198,6 +196,8 @@ export class HRComponent implements OnInit {
     this.dataService.addNewCandidate(candidateData).subscribe(
       response => {
         this.getCandidates(); // Refresh candidate list after adding
+        this.getInterviewOptions();  // Refetch interview options for dropdowns
+
         this.newCandidate = { name: '', position: '', customPosition: '' }; // Reset form
         this.isCustomPosition = false; // Reset custom position flag
       },
@@ -224,25 +224,55 @@ export class HRComponent implements OnInit {
   isCustomPosition: boolean = false;  // Toggle for custom position input
   
 
-  addNewRound() {
-    const roundData = {
-      ...this.newRound,
-      interview_date: this.formatLocalDate(this.newRound.interview_date), // Correct date handling
-      c_id: this.selectedCandidate.Candidate_ID,
-      status: this.newRound.status === 'Custom' ? this.newRound.customStatus : this.newRound.status // Use custom status if selected
-    };
+  newRound: {
+    round_number: string;
+    customRoundNumber?: string;  // Optional custom round number
+    interviewer: string;
+    customInterviewer?: string;  // Optional custom interviewer
+    interview_date: string;
+    status: string;
+    customStatus?: string;       // Optional custom status
+    remarks: string;
+  } = {
+    round_number: '',
+    customRoundNumber: '',  // Default to empty string
+    interviewer: '',
+    customInterviewer: '',  // Default to empty string
+    interview_date: '',
+    status: '',
+    customStatus: '',       // Default to empty string
+    remarks: ''
+  };
 
+
+
+
+  addNewRound() {
+    // Prepare final values for each field, using custom fields if selected as "Custom"
+    const roundData = {
+      round_number: this.newRound.round_number === 'Custom' ? this.newRound.customRoundNumber : this.newRound.round_number,
+      interviewer: this.newRound.interviewer === 'Custom' ? this.newRound.customInterviewer : this.newRound.interviewer,
+      interview_date: this.formatLocalDate(this.newRound.interview_date), // Adjust date formatting as needed
+      status: this.newRound.status === 'Custom' ? this.newRound.customStatus : this.newRound.status,
+      remarks: this.newRound.remarks,
+      c_id: this.selectedCandidate.Candidate_ID // Candidate ID
+    };
+  
+    // Send data to backend
     this.dataService.addNewRound(this.selectedCandidate.Candidate_ID, roundData)
       .subscribe(
         () => {
           this.getCandidates(); // Refresh candidate list
-          this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '', customStatus: '' }; // Reset form
+          this.getInterviewOptions(); // Refetch interview options for dropdowns
+
+          this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '', customRoundNumber: '', customInterviewer: '', customStatus: '' }; // Reset form
         },
         error => {
           console.error('Error adding round:', error);
         }
       );
   }
+  
 
 
   // selectCandidate(candidate: any) {
@@ -269,6 +299,8 @@ export class HRComponent implements OnInit {
           (response) => {
             console.log('Interview round deleted:', response);
             this.getCandidates(); // Refresh candidate list after deletion
+            this.getInterviewOptions(); // Refresh interview options after deleting a round
+
           },
           (error) => {
             console.error('There was an error deleting the interview round!', error);
@@ -282,9 +314,14 @@ export class HRComponent implements OnInit {
   
   updateCandidate() {
     if (this.selectedCandidate) {
+      // If position is 'Custom', assign customPosition to position
+      if (this.isCustomPosition) {
+        this.selectedCandidate.Position = this.selectedCandidate.customPosition || ''; // Ensure position is a string
+      }
+
       const updatedCandidate = {
         name: this.selectedCandidate.Candidate_Name,
-        position: this.selectedCandidate.Position
+        position: this.selectedCandidate.Position || '', // Provide an empty string if position is undefined
       };
 
       this.dataService.updateCandidate(this.selectedCandidate.Candidate_ID, updatedCandidate)

@@ -206,19 +206,46 @@ app.post('/api/candidates', (req, res) => {
 
 
 // Add a new interview round for an existing candidate
+// app.post('/api/candidates/:id/interview-rounds', (req, res) => {
+//   const { id } = req.params; // Candidate ID from the URL
+//   const { round_number, interviewer, interview_date, status, remarks } = req.body;
+
+//   if (!round_number || !interviewer || !interview_date || !status) {
+//     return res.status(400).json({ error: 'All fields are required for the interview round' });
+//   }
+
+//   const addInterviewRoundQuery = `
+//     INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks) 
+//     VALUES (?, ?, ?, ?, ?, ?)
+//   `;
+
+//   db.query(addInterviewRoundQuery, [id, round_number, interviewer, interview_date, status, remarks], (err) => {
+//     if (err) {
+//       console.error('Error inserting interview round:', err);
+//       return res.status(500).json({ error: err.message || 'Database error' });
+//     }
+//     res.status(201).json({ message: 'Interview round added successfully' });
+//   });
+// });
+
+
+
 app.post('/api/candidates/:id/interview-rounds', (req, res) => {
   const { id } = req.params; // Candidate ID from the URL
   const { round_number, interviewer, interview_date, status, remarks } = req.body;
 
+  // Validate required fields
   if (!round_number || !interviewer || !interview_date || !status) {
     return res.status(400).json({ error: 'All fields are required for the interview round' });
   }
 
+  // Prepare the query
   const addInterviewRoundQuery = `
     INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks) 
     VALUES (?, ?, ?, ?, ?, ?)
   `;
 
+  // Execute the query
   db.query(addInterviewRoundQuery, [id, round_number, interviewer, interview_date, status, remarks], (err) => {
     if (err) {
       console.error('Error inserting interview round:', err);
@@ -227,6 +254,9 @@ app.post('/api/candidates/:id/interview-rounds', (req, res) => {
     res.status(201).json({ message: 'Interview round added successfully' });
   });
 });
+
+
+
 
 
 
@@ -273,6 +303,38 @@ app.post('/api/login', (req, res) => {
   });
   
 // Update a candidate's name and position
+// app.put('/api/candidates/:id', (req, res) => {
+//   const { id } = req.params;
+//   const { name, position } = req.body;
+
+//   if (!name || !position) {
+//     return res.status(400).json({ error: 'Name and position are required' });
+//   }
+
+//   const upperCaseName = name.toUpperCase(); // Ensure the name is stored in uppercase
+
+//   const updateCandidateQuery = `
+//     UPDATE candidates 
+//     SET c_name = ?, position = ?
+//     WHERE c_id = ?
+//   `;
+
+//   db.query(updateCandidateQuery, [upperCaseName, position, id], (err, result) => {
+//     if (err) {
+//       console.error('Error updating candidate:', err);
+//       return res.status(500).json({ error: 'Database error' });
+//     }
+
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ message: 'Candidate not found' });
+//     }
+
+//     res.json({ message: 'Candidate updated successfully' });
+//   });
+// });
+
+
+
 app.put('/api/candidates/:id', (req, res) => {
   const { id } = req.params;
   const { name, position } = req.body;
@@ -302,6 +364,7 @@ app.put('/api/candidates/:id', (req, res) => {
     res.json({ message: 'Candidate updated successfully' });
   });
 });
+
 
 
 // ceo

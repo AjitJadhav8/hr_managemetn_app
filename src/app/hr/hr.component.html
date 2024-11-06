@@ -124,7 +124,7 @@
 
 
 <!-- Add New Interview Round Form for Selected Candidate -->
-<div *ngIf="showAddRound" class="add-round-container">
+<!-- <div *ngIf="showAddRound" class="add-round-container">
   <h2>Add Interview Round for {{ selectedCandidate.Candidate_Name }}</h2>
   <form (ngSubmit)="addNewRound()">
     <div>
@@ -164,7 +164,77 @@
     </div>
     <button type="submit">Add Interview Round</button>
   </form>
+</div> -->
+
+
+<!-- Add New Interview Round Form for Selected Candidate -->
+<div *ngIf="showAddRound" class="add-round-container">
+  <h2>Add Interview Round for {{ selectedCandidate.Candidate_Name }}</h2>
+  <form (ngSubmit)="addNewRound()">
+    <!-- Round Number Selection -->
+    <div>
+      <label for="round_number">Round Number:</label>
+      <select [(ngModel)]="newRound.round_number" name="round_number" required>
+        <option value="" disabled>Select Round Number</option>
+        <option *ngFor="let round of interviewOptions.roundNumbers" [value]="round">{{ round }}</option>
+        <option value="Custom">Custom</option>
+      </select>
+    </div>
+    <div *ngIf="newRound.round_number === 'Custom'">
+      <label for="customRoundNumber">Enter Custom Round Number:</label>
+      <input type="text" [(ngModel)]="newRound.customRoundNumber" name="customRoundNumber" placeholder="Type custom round number">
+    </div>
+
+    <!-- Interviewer Selection -->
+    <div>
+      <label for="interviewer">Interviewer:</label>
+      <select [(ngModel)]="newRound.interviewer" name="interviewer" required>
+        <option value="" disabled>Select Interviewer</option>
+        <option *ngFor="let interviewer of interviewOptions.interviewers" [value]="interviewer">{{ interviewer }}</option>
+        <option value="Custom">Custom</option>
+      </select>
+    </div>
+    <div *ngIf="newRound.interviewer === 'Custom'">
+      <label for="customInterviewer">Enter Custom Interviewer:</label>
+      <input type="text" [(ngModel)]="newRound.customInterviewer" name="customInterviewer" placeholder="Type custom interviewer">
+    </div>
+
+    <!-- Interview Date Selection -->
+    <div>
+      <label for="interview_date">Interview Date:</label>
+      <input type="date" [(ngModel)]="newRound.interview_date" name="interview_date" required>
+    </div>
+
+    <!-- Status Selection -->
+    <div>
+      <label for="status">Status:</label>
+      <select [(ngModel)]="newRound.status" name="status" required>
+        <option value="" disabled>Select Status</option>
+        <option *ngFor="let status of interviewOptions.statuses" [value]="status">{{ status }}</option>
+        <option value="Custom">Custom</option>
+      </select>
+    </div>
+    <div *ngIf="newRound.status === 'Custom'">
+      <label for="customStatus">Enter Custom Status:</label>
+      <input type="text" [(ngModel)]="newRound.customStatus" name="customStatus" placeholder="Type custom status">
+    </div>
+
+    <!-- Remarks -->
+    <div>
+      <label for="remarks">Remarks:</label>
+      <textarea [(ngModel)]="newRound.remarks" name="remarks"></textarea>
+    </div>
+
+    <button type="submit">Add Interview Round</button>
+  </form>
 </div>
+
+
+
+
+
+
+
 
 <!-- Candidate Update Form -->
 <div *ngIf="showUpdateCandidate" class="update-candidate-container">
@@ -174,11 +244,21 @@
     <input type="text" [(ngModel)]="selectedCandidate.Candidate_Name" name="name" required>
 
     <label for="position">Position:</label>
-    <input type="text" [(ngModel)]="selectedCandidate.Position" name="position" required>
+    <select [(ngModel)]="selectedCandidate.Position" name="position" (change)="isCustomPosition = selectedCandidate.Position === 'Custom'">
+      <option *ngFor="let position of interviewOptions.positions" [value]="position">{{ position }}</option>
+      <option value="Custom">Custom</option>
+    </select>
+
+    <!-- Custom Position Input -->
+    <div *ngIf="isCustomPosition">
+      <label for="customPosition">Enter Custom Position:</label>
+      <input type="text" [(ngModel)]="selectedCandidate.customPosition" name="customPosition" required>
+    </div>
 
     <button type="submit">Update Candidate</button>
   </form>
 </div>
+
 
 
 <!-- Interview History Section -->
