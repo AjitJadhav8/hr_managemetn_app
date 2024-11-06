@@ -80,7 +80,7 @@
         <th>Serial No.</th> 
         <th>Name</th>
         <th>Position</th>
-        <th>Round Number</th>
+        <th>Round</th>
         <th>Interviewer</th>
         <th>Interview Date</th>
         <th>Status</th>
@@ -173,7 +173,7 @@
   <form (ngSubmit)="addNewRound()">
     <!-- Round Number Selection -->
     <div>
-      <label for="round_number">Round Number:</label>
+      <label for="round_number">Round :</label>
       <select [(ngModel)]="newRound.round_number" name="round_number" required>
         <option value="" disabled>Select Round Number</option>
         <option *ngFor="let round of interviewOptions.roundNumbers" [value]="round">{{ round }}</option>
@@ -232,10 +232,6 @@
 
 
 
-
-
-
-
 <!-- Candidate Update Form -->
 <div *ngIf="showUpdateCandidate" class="update-candidate-container">
   <h2>Update Candidate Details for {{ selectedCandidate.Candidate_Name }}</h2>
@@ -267,7 +263,7 @@
   <table>
     <thead>
       <tr>
-        <th>Round Number</th>
+        <th>Round </th>
         <th>Interviewer</th>
         <th>Interview Date</th>
         <th>Status</th>

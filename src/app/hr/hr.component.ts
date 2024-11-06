@@ -17,14 +17,11 @@ export class HRComponent implements OnInit {
   loggedInHRId: string | null = '';
   candidates: any[] = [];
 
-  // Candidate form
-  
-  // Interview round form
 
 
   selectedCandidate: any = null;
 
-  constructor(private http: HttpClient, private router: Router,private dataService: DataService) {}
+  constructor(private http: HttpClient, private router: Router, private dataService: DataService) { }
 
   ngOnInit(): void {
     this.loggedInHR = localStorage.getItem('loggedInHR') || '';
@@ -39,11 +36,11 @@ export class HRComponent implements OnInit {
     }
 
     // Fetch interview options for dropdowns
-  this.dataService.getInterviewOptions().subscribe((data) => {
-    this.interviewOptions = data;
-    console.log('Interview Options:', this.interviewOptions);
-  });
-  this.getInterviewOptions();
+    this.dataService.getInterviewOptions().subscribe((data) => {
+      this.interviewOptions = data;
+      console.log('Interview Options:', this.interviewOptions);
+    });
+    this.getInterviewOptions();
 
 
   }
@@ -63,26 +60,14 @@ export class HRComponent implements OnInit {
   }
 
   showAddRound: boolean = false;  // New property to control Add Round section visibility
-  showUpdateCandidate: boolean = false; 
+  showUpdateCandidate: boolean = false;
 
   selectCandidate(candidate: any) {
     this.selectedCandidate = candidate;
-    // this.newRound = {
-    //   round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1',
-    //   interviewer: candidate.Interviewer || '',
-    //   interview_date: candidate.Interview_Date || '',
-    //   status: candidate.Status || '',
-    //   remarks: candidate.Remarks || ''
-    // };
-
     // Reset the visibility flags
     this.showAddRound = false;
     this.showUpdateCandidate = false;
   }
-
-
-
-
 
 
 
@@ -97,7 +82,7 @@ export class HRComponent implements OnInit {
     };
     this.showAddRound = true; // Show the add round form directly
   }
-  
+
 
   showUpdateCandidateSection() {
     this.showUpdateCandidate = true;
@@ -112,31 +97,13 @@ export class HRComponent implements OnInit {
     return new Date(date.getTime() - userTimezoneOffset).toISOString().split('T')[0];
   }
 
-  // getCandidates() {
-  //   console.log('Fetching candidates for HR ID:', this.loggedInHRId);
-  //   this.dataService.getCandidates(this.loggedInHRId)
-  //     .subscribe(
-  //       (data) => {
-  //         this.candidates = data.map(candidate => {
-  //           return {
-  //             ...candidate,
-  //             Interview_Date: candidate.Interview_Date ? this.formatLocalDate(candidate.Interview_Date) : 'N/A' // Set to 'N/A' if date is not present
-  //           };
-  //         });
-  //         console.log('Fetched candidates:', this.candidates);
-  //       },
-  //       (error) => {
-  //         console.error('There was an error fetching the candidates!', error.message || error);
-  //       }
-  //     );
-  // }
 
 
 
 
   getCandidates() {
     console.log('Fetching candidates for HR ID:', this.loggedInHRId);
-    
+
     this.dataService.getCandidates(this.loggedInHRId)
       .subscribe(
         (data) => {
@@ -145,7 +112,7 @@ export class HRComponent implements OnInit {
             ...candidate,
             Interview_Date: candidate.Interview_Date ? this.formatLocalDate(candidate.Interview_Date) : 'N/A' // Set to 'N/A' if date is not present
           }));
-          
+
           console.log('Fetched candidates:', this.candidates);
         },
         (error) => {
@@ -153,28 +120,12 @@ export class HRComponent implements OnInit {
         }
       );
   }
-  
 
 
 
-  // addNewCandidate() {
-  //   const candidateData = {
-  //     name: this.newCandidate.name,
-  //     position: this.newCandidate.position,
-  //     u_id: this.loggedInHRId
-  //   };
 
-  //   this.dataService.addNewCandidate(candidateData)
-  //     .subscribe(
-  //       response => {
-  //         this.getCandidates(); // Refresh candidate list
-  //         this.newCandidate = { name: '', position: '' }; // Reset form
-  //       },
-  //       error => {
-  //         console.error('Error adding candidate:', error);
-  //       }
-  //     );
-  // }
+
+
 
 
   newCandidate: { name: string, position: string | undefined, customPosition?: string } = { name: '', position: undefined, customPosition: '' };
@@ -184,14 +135,14 @@ export class HRComponent implements OnInit {
     if (this.isCustomPosition) {
       this.newCandidate.position = this.newCandidate.customPosition || ''; // Ensure position is a string (use empty string if undefined)
     }
-  
+
     // Prepare the candidate data, making sure position is a valid string
     const candidateData = {
       name: this.newCandidate.name,
       position: this.newCandidate.position || '', // Provide an empty string if position is undefined
       u_id: this.loggedInHRId
     };
-  
+
     // Call the service to add the new candidate
     this.dataService.addNewCandidate(candidateData).subscribe(
       response => {
@@ -206,7 +157,7 @@ export class HRComponent implements OnInit {
       }
     );
   }
-  
+
 
 
 
@@ -217,12 +168,12 @@ export class HRComponent implements OnInit {
     remarks: [],
     statuses: [],
   };
-  
+
   selectedStatus: string = '';
   isCustomStatus: boolean = false;  // Toggle for custom status input
   selectedPosition: string = '';
   isCustomPosition: boolean = false;  // Toggle for custom position input
-  
+
 
   newRound: {
     round_number: string;
@@ -234,15 +185,15 @@ export class HRComponent implements OnInit {
     customStatus?: string;       // Optional custom status
     remarks: string;
   } = {
-    round_number: '',
-    customRoundNumber: '',  // Default to empty string
-    interviewer: '',
-    customInterviewer: '',  // Default to empty string
-    interview_date: '',
-    status: '',
-    customStatus: '',       // Default to empty string
-    remarks: ''
-  };
+      round_number: '',
+      customRoundNumber: '',  // Default to empty string
+      interviewer: '',
+      customInterviewer: '',  // Default to empty string
+      interview_date: '',
+      status: '',
+      customStatus: '',       // Default to empty string
+      remarks: ''
+    };
 
 
 
@@ -257,7 +208,7 @@ export class HRComponent implements OnInit {
       remarks: this.newRound.remarks,
       c_id: this.selectedCandidate.Candidate_ID // Candidate ID
     };
-  
+
     // Send data to backend
     this.dataService.addNewRound(this.selectedCandidate.Candidate_ID, roundData)
       .subscribe(
@@ -272,27 +223,14 @@ export class HRComponent implements OnInit {
         }
       );
   }
-  
 
 
-  // selectCandidate(candidate: any) {
-  //   this.selectedCandidate = candidate;
-  
-  //   // Set the candidateId from the selected candidate
-    
-  //   // Update the form with selected candidate details
-  //   this.newRound = {
-  //     round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1', // Default to '1' if NaN
-  //     interviewer: candidate.Interviewer || '',
-  //     interview_date: candidate.Interview_Date || '', // Ensure this is in the correct format
-  //     status: candidate.Status || '',
-  //     remarks: candidate.Remarks || ''
-  //   };
-  // }
+
+
 
   deleteInterviewRound(candidateId: number, roundNumber: string, candidateName: string) {
     const confirmDelete = confirm(`Are you sure you want to delete interview round ${roundNumber} for ${candidateName}?`);
-    
+
     if (confirmDelete) {
       this.dataService.deleteInterviewRound(candidateId, roundNumber)
         .subscribe(
@@ -311,7 +249,7 @@ export class HRComponent implements OnInit {
     }
   }
 
-  
+
   updateCandidate() {
     if (this.selectedCandidate) {
       // If position is 'Custom', assign customPosition to position
@@ -338,12 +276,12 @@ export class HRComponent implements OnInit {
       console.error('No candidate selected for update.');
     }
   }
-  
-  logout(){
+
+  logout() {
     localStorage.removeItem('loggedInHR');
     localStorage.removeItem('loggedInHRId');
     console.log('Logged out successfully.');
-    
+
     // Navigate to login page
     this.router.navigate(['/login']); // Redirect to HR dashboard for other users
   }
@@ -360,93 +298,80 @@ export class HRComponent implements OnInit {
     this.selectedCandidate = null;
   }
 
-// In hr.component.ts
-currentPassword: string = '';
-newPassword: string = '';
-confirmPassword: string = '';
-showChangePasswordForm: boolean = false;
+  // In hr.component.ts
+  currentPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
+  showChangePasswordForm: boolean = false;
 
-// Other methods...
 
-changePassword() {
-  if (this.newPassword !== this.confirmPassword) {
-    alert("New passwords do not match!");
-    return;
+
+  changePassword() {
+    if (this.newPassword !== this.confirmPassword) {
+      alert("New passwords do not match!");
+      return;
+    }
+
+    // Ensure loggedInHRId is a string
+    if (!this.loggedInHRId) {
+      alert("User ID is not valid.");
+      return;
+    }
+
+    // Create changePasswordData without userId
+    const changePasswordData = {
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword
+    };
+
+    // Call the dataService with both userId and changePasswordData
+    this.dataService.changePassword(this.loggedInHRId as string, changePasswordData).subscribe(
+      (response) => {
+        alert("Password changed successfully!");
+        this.showChangePasswordForm = false;
+        this.resetChangePasswordForm();
+      },
+      (error) => {
+        console.error('Error changing password:', error);
+        alert("Failed to change password: " + (error.error?.message || "Unknown error"));
+      }
+    );
   }
 
-  // Ensure loggedInHRId is a string
-  if (!this.loggedInHRId) {
-    alert("User ID is not valid.");
-    return;
+
+  resetChangePasswordForm() {
+    this.currentPassword = '';
+    this.newPassword = '';
+    this.confirmPassword = '';
   }
 
-  // Create changePasswordData without userId
-  const changePasswordData = {
-    currentPassword: this.currentPassword,
-    newPassword: this.newPassword
-  };
 
-  // Call the dataService with both userId and changePasswordData
-  this.dataService.changePassword(this.loggedInHRId as string, changePasswordData).subscribe(
-    (response) => {
-      alert("Password changed successfully!");
-      this.showChangePasswordForm = false;
-      this.resetChangePasswordForm();
-    },
-    (error) => {
-      console.error('Error changing password:', error);
-      alert("Failed to change password: " + (error.error?.message || "Unknown error"));
-    }
-  );
-}
+  showHistory: boolean = false; // Control the visibility of the history section
+  candidateHistory: any[] = []; // Holds the interview rounds history for the selected candidate
 
+  showHistorySection() {
+    console.log("Showing history section for candidate:", this.selectedCandidate);
+    this.showHistory = true;
+    this.getCandidateHistory(this.selectedCandidate.Candidate_ID);
+  }
 
-resetChangePasswordForm() {
-  this.currentPassword = '';
-  this.newPassword = '';
-  this.confirmPassword = '';
-}
-
-
-
-
-
-
-
-showHistory: boolean = false; // Control the visibility of the history section
-candidateHistory: any[] = []; // Holds the interview rounds history for the selected candidate
-
-showHistorySection() {
-  console.log("Showing history section for candidate:", this.selectedCandidate);
-  this.showHistory = true;
-  this.getCandidateHistory(this.selectedCandidate.Candidate_ID);
-}
-
-// Fetches all interview rounds for a selected candidate
-getCandidateHistory(candidateId: number) {
-  console.log("Fetching history for candidate ID:", candidateId);
-  this.dataService.getInterviewRounds(candidateId).subscribe(
-    (history) => {
-      console.log("Interview history fetched:", history);
-      this.candidateHistory = history.map(round => ({
-        ...round,
-        Interview_Date: round.Interview_Date ? this.formatLocalDate(round.Interview_Date) : 'N/A'
-      }));
-      console.log("Formatted candidate history:", this.candidateHistory);
-    },
-    (error) => {
-      console.error("Error fetching interview history:", error);
-    }
-  );
-}
-
-
-
-
-
-
-
-
+  // Fetches all interview rounds for a selected candidate
+  getCandidateHistory(candidateId: number) {
+    console.log("Fetching history for candidate ID:", candidateId);
+    this.dataService.getInterviewRounds(candidateId).subscribe(
+      (history) => {
+        console.log("Interview history fetched:", history);
+        this.candidateHistory = history.map(round => ({
+          ...round,
+          Interview_Date: round.Interview_Date ? this.formatLocalDate(round.Interview_Date) : 'N/A'
+        }));
+        console.log("Formatted candidate history:", this.candidateHistory);
+      },
+      (error) => {
+        console.error("Error fetching interview history:", error);
+      }
+    );
+  }
 
 
 
