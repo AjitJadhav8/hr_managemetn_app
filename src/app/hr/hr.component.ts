@@ -75,14 +75,19 @@ export class HRComponent implements OnInit {
     this.selectedCandidate = candidate; // Set the selected candidate for the add round form
     this.newRound = {
       round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1',
-      interviewer: '', // You can initialize as empty or set default if required
-      interview_date: '', // You can initialize as empty or set default if required
-      status: '', // Initialize as empty for now
-      remarks: '' // Initialize as empty for now
+      interviewer: '', 
+      interview_date: '', 
+      status: '', 
+      remarks: '' 
     };
-    this.showAddRound = true; // Show the add round form directly
-  }
+    this.showAddRound = true; 
+    this.toggleAddRoundModal(); // Open the modal
 
+  }
+  toggleAddRoundModal() {
+    this.showAddRoundModal = !this.showAddRoundModal; // Toggle modal visibility
+  }
+  showAddRoundModal = false;  // Initialize as false to hide the modal initially
 
   showUpdateCandidateSection() {
     this.showUpdateCandidate = true;
@@ -120,11 +125,6 @@ export class HRComponent implements OnInit {
         }
       );
   }
-
-
-
-
-
 
 
 
@@ -230,15 +230,16 @@ export class HRComponent implements OnInit {
 
   deleteInterviewRound(candidateId: number, roundNumber: string, candidateName: string) {
     const confirmDelete = confirm(`Are you sure you want to delete interview round ${roundNumber} for ${candidateName}?`);
-
+  
     if (confirmDelete) {
-      this.dataService.deleteInterviewRound(candidateId, roundNumber)
+      const encodedRoundNumber = encodeURIComponent(roundNumber); // Ensure round_number is URL-safe
+  
+      this.dataService.deleteInterviewRound(candidateId, encodedRoundNumber)
         .subscribe(
           (response) => {
             console.log('Interview round deleted:', response);
             this.getCandidates(); // Refresh candidate list after deletion
             this.getInterviewOptions(); // Refresh interview options after deleting a round
-
           },
           (error) => {
             console.error('There was an error deleting the interview round!', error);
@@ -248,6 +249,7 @@ export class HRComponent implements OnInit {
       console.log('Delete operation was canceled.');
     }
   }
+  
 
 
   updateCandidate() {
@@ -373,6 +375,7 @@ export class HRComponent implements OnInit {
     );
   }
 
+  
 
 
 }

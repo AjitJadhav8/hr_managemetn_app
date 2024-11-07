@@ -24,9 +24,6 @@ app.use(bodyParser.json());
 app.use(cors());
 
 
-
-
-
 // In your Node.js backend
 app.get('/api/interview-options', async (req, res) => {
   try {
@@ -48,12 +45,6 @@ app.get('/api/interview-options', async (req, res) => {
     res.status(500).send("Error retrieving interview options");
   }
 });
-
-
-
-
-
-
 
 
 
@@ -265,6 +256,7 @@ app.post('/api/candidates/:id/interview-rounds', (req, res) => {
 app.delete('/api/candidates/:id/interview-rounds/:round_number', (req, res) => {
   const { id, round_number } = req.params;
 
+  // If round_number contains spaces, ensure it is correctly encoded (e.g., HR Round becomes HR%20Round)
   const query = 'DELETE FROM interview_rounds WHERE c_id = ? AND round_number = ?';
 
   db.query(query, [id, round_number], (err, result) => {
@@ -366,41 +358,6 @@ app.put('/api/candidates/:id', (req, res) => {
 });
 
 
-
-// ceo
-// Get all candidates from all HRs
-// Get all candidates from all HRs
-// app.get('/api/all-candidates', (req, res) => {
-//   const query = `
-//   SELECT 
-//       c.c_id AS Candidate_ID,
-//       c.c_name AS Candidate_Name,
-//       c.position AS Position,
-//       c.u_id AS HR_ID,
-//       u.name AS HR_Name,  -- Fetch HR name from the users table
-//       ir.round_number AS Round_Number,
-//       ir.interviewer AS Interviewer,
-//       ir.interview_date AS Interview_Date,
-//       ir.status AS Status,
-//       ir.remarks AS Remarks
-//   FROM 
-//       candidates c
-//   LEFT JOIN 
-//       interview_rounds ir ON c.c_id = ir.c_id
-//   LEFT JOIN 
-//       users u ON c.u_id = u.u_id  -- Join with users table to get HR names
-//   ORDER BY 
-//       c.c_id, ir.round_number;`;
-
-//   db.query(query, (err, results) => {
-//       if (err) {
-//           console.error('Database query error:', err);
-//           return res.status(500).json({ error: 'Database query error' });
-//       }
-//       console.log('Query results:', results);
-//       res.json(results);
-//   });
-// });
 
 // Get all distinct candidates from all HRs (no interview details in the list)
 app.get('/api/all-candidates', (req, res) => {

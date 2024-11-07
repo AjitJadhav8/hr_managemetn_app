@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 })
 export class DataService {
   private apiUrl = 'http://localhost:3000'; // Base URL for your API
-
   constructor(private http: HttpClient) {}
 
   // Fetch all candidates for CEO
