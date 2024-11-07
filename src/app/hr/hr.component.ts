@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: './hr.component.html',
   styleUrl: './hr.component.css'
 })
-export class HRComponent implements OnInit {
+export class HRComponent implements OnInit  {
   loggedInHR: string = '';
   loggedInHRId: string | null = '';
   candidates: any[] = [];
@@ -67,7 +67,10 @@ export class HRComponent implements OnInit {
     // Reset the visibility flags
     this.showAddRound = false;
     this.showUpdateCandidate = false;
+    this.showActionModal = true; // Show the modal when a candidate is selected
+
   }
+  showActionModal: boolean = false;  // Add this line to declare the flag
 
 
 
@@ -89,11 +92,25 @@ export class HRComponent implements OnInit {
   }
   showAddRoundModal = false;  // Initialize as false to hide the modal initially
 
+
+  closeActionModal() {
+    this.showActionModal = false;
+  }
+
+
+
+
+
+
+
+
+
+
+
   showUpdateCandidateSection() {
     this.showUpdateCandidate = true;
     this.showAddRound = false; // Hide add round section
   }
-
 
 
   formatLocalDate(dateString: string): string {
@@ -101,9 +118,6 @@ export class HRComponent implements OnInit {
     const userTimezoneOffset = date.getTimezoneOffset() * 60000; // Get the timezone offset in milliseconds
     return new Date(date.getTime() - userTimezoneOffset).toISOString().split('T')[0];
   }
-
-
-
 
 
   getCandidates() {
@@ -376,6 +390,21 @@ export class HRComponent implements OnInit {
   }
 
   
+  openUpdateCandidateModal() {
+    this.showUpdateCandidate = true;
+  }
 
+  // Close Update Candidate Modal
+  closeUpdateCandidateModal() {
+    this.showUpdateCandidate = false;
+  }
+  openHistoryModal() {
+    this.showHistory = true;
+  }
+
+  // Close History Modal
+  closeHistoryModal() {
+    this.showHistory = false;
+  }
 
 }

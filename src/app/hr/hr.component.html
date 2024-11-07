@@ -108,7 +108,8 @@
   <!-- Options for the selected candidate -->
  
 </div>
-<div *ngIf="selectedCandidate" class="selected-candidate-actions">
+
+<!-- <div *ngIf="selectedCandidate" class="selected-candidate-actions">
   <h3>Actions for {{ selectedCandidate.Candidate_Name }}</h3>
   <button (click)="showUpdateCandidateSection()">Update Candidate</button>
   <button (click)="showHistorySection()">View History</button>
@@ -116,7 +117,21 @@
     Delete Round
   </button>
 
+</div> -->
+<!-- Modal for Actions (Update, View History, Delete) -->
+<!-- Modal for Actions (Update, View History, Delete) -->
+<div *ngIf="showActionModal" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeActionModal()">&times;</span> <!-- Close button -->
+    <h2>Actions for {{ selectedCandidate.Candidate_Name }}</h2>
+    <button (click)="showUpdateCandidateSection()">Update Candidate</button>
+    <button (click)="showHistorySection()">View History</button>
+    <button (click)="deleteInterviewRound(selectedCandidate.Candidate_ID, selectedCandidate.Round_Number, selectedCandidate.Candidate_Name)">
+      Delete Round
+    </button>
+  </div>
 </div>
+
 
 
 
@@ -192,53 +207,62 @@
 
 
 
+<!-- Candidate Update Modal -->
+<div *ngIf="showUpdateCandidate" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" (click)="closeUpdateCandidateModal()">&times;</span>
+    <h2>Update Candidate Details for {{ selectedCandidate.Candidate_Name }}</h2>
+    <form (submit)="updateCandidate()">
+      <label for="name">Name:</label>
+      <input type="text" [(ngModel)]="selectedCandidate.Candidate_Name" name="name" required>
 
-<!-- Candidate Update Form -->
-<div *ngIf="showUpdateCandidate" class="update-candidate-container">
-  <h2>Update Candidate Details for {{ selectedCandidate.Candidate_Name }}</h2>
-  <form (submit)="updateCandidate()">
-    <label for="name">Name:</label>
-    <input type="text" [(ngModel)]="selectedCandidate.Candidate_Name" name="name" required>
+      <label for="position">Position:</label>
+      <select [(ngModel)]="selectedCandidate.Position" name="position" (change)="isCustomPosition = selectedCandidate.Position === 'Custom'">
+        <option *ngFor="let position of interviewOptions.positions" [value]="position">{{ position }}</option>
+        <option value="Custom">Custom</option>
+      </select>
 
-    <label for="position">Position:</label>
-    <select [(ngModel)]="selectedCandidate.Position" name="position" (change)="isCustomPosition = selectedCandidate.Position === 'Custom'">
-      <option *ngFor="let position of interviewOptions.positions" [value]="position">{{ position }}</option>
-      <option value="Custom">Custom</option>
-    </select>
+      <!-- Custom Position Input -->
+      <div *ngIf="isCustomPosition">
+        <label for="customPosition">Enter Custom Position:</label>
+        <input type="text" [(ngModel)]="selectedCandidate.customPosition" name="customPosition" required>
+      </div>
 
-    <!-- Custom Position Input -->
-    <div *ngIf="isCustomPosition">
-      <label for="customPosition">Enter Custom Position:</label>
-      <input type="text" [(ngModel)]="selectedCandidate.customPosition" name="customPosition" required>
-    </div>
-
-    <button type="submit">Update Candidate</button>
-  </form>
+      <button type="submit">Update Candidate</button>
+    </form>
+  </div>
 </div>
 
-
-
-<!-- Interview History Section -->
-<div *ngIf="showHistory" class="history-section">
-  <h3>Interview History for {{ selectedCandidate.Candidate_Name }}</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Round </th>
-        <th>Interviewer</th>
-        <th>Interview Date</th>
-        <th>Status</th>
-        <th>Remarks</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let round of candidateHistory">
-        <td>{{ round.Round_Number }}</td>
-        <td>{{ round.Interviewer }}</td>
-        <td>{{ round.Interview_Date }}</td>
-        <td>{{ round.Status }}</td>
-        <td>{{ round.Remarks }}</td>
-      </tr>
-    </tbody>
-  </table>
+<!-- Interview History Modal -->
+<div *ngIf="showHistory" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" (click)="closeHistoryModal()">&times;</span>
+    <h3>Interview History for {{ selectedCandidate.Candidate_Name }}</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Round </th>
+          <th>Interviewer</th>
+          <th>Interview Date</th>
+          <th>Status</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let round of candidateHistory">
+          <td>{{ round.Round_Number }}</td>
+          <td>{{ round.Interviewer }}</td>
+          <td>{{ round.Interview_Date }}</td>
+          <td>{{ round.Status }}</td>
+          <td>{{ round.Remarks }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<!-- Buttons to Trigger Modals -->
+<!-- <div class="actions">
+  <button (click)="openUpdateCandidateModal()">Update Candidate</button>
+  <button (click)="openHistoryModal()">View History</button>
+</div> -->
