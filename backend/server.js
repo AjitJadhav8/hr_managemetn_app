@@ -118,6 +118,9 @@ app.get('/api/candidates', (req, res) => {
     c.c_id DESC;  -- Change to DESC to get most recent first
   `;
 
+  // ir.interview_date DESC;  -- Sort by interview_date in descending order
+
+
   db.query(query, [u_id], (err, results) => {
       if (err) {
           console.error('Database query error:', err);

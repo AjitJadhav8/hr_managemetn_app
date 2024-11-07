@@ -18,7 +18,6 @@ export class HRComponent implements OnInit  {
   candidates: any[] = [];
 
 
-
   selectedCandidate: any = null;
 
   constructor(private http: HttpClient, private router: Router, private dataService: DataService) { }
@@ -121,7 +120,8 @@ export class HRComponent implements OnInit  {
             ...candidate,
             Interview_Date: candidate.Interview_Date ? this.formatLocalDate(candidate.Interview_Date) : 'N/A' // Set to 'N/A' if date is not present
           }));
-
+          this.totalCandidates = this.candidates.length;  // Total number of candidates for pagination
+          this.updatePageCandidates();
           console.log('Fetched candidates:', this.candidates);
         },
         (error) => {
@@ -129,6 +129,68 @@ export class HRComponent implements OnInit  {
         }
       );
   }
+
+
+
+
+
+  currentPage: number = 1;
+  pageSize: number = 30;  // Number of candidates per page
+  totalCandidates: number = 0;
+
+
+  get paginatedCandidates() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = this.currentPage * this.pageSize;
+    return this.candidates.slice(startIndex, endIndex);
+  }
+
+  // Function to go to the next page
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePageCandidates();
+    }
+  }
+
+  // Function to go to the previous page
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePageCandidates();
+    }
+  }
+
+  // Function to go to a specific page
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePageCandidates();
+    }
+  }
+
+  // Calculate the total number of pages
+  get totalPages() {
+    return Math.ceil(this.totalCandidates / this.pageSize);
+  }
+
+  // Update the displayed candidates for the current page
+  updatePageCandidates() {
+    this.paginatedCandidates;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   newCandidate: { name: string, position: string | undefined, customPosition?: string } = { name: '', position: undefined, customPosition: '' };

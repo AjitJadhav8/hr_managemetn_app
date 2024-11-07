@@ -75,7 +75,7 @@
 
   <!-- Candidate List Section -->
 <!-- Candidate List Section -->
-<div *ngIf="currentSection === 'candidateList'" class="candidate-list-container">
+<!-- <div *ngIf="currentSection === 'candidateList'" class="candidate-list-container">
   <h2>Candidate List</h2>
   <table>
     <thead>
@@ -108,11 +108,55 @@
         </td>
       </tr>
     </tbody>
+  </table> 
+</div> -->
+<div *ngIf="currentSection === 'candidateList'" class="candidate-list-container">
+  <h2>Candidate List</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Serial No.</th> 
+        <th>Name</th>
+        <th>Position</th>
+        <th>Round</th>
+        <th>Interviewer</th>
+        <th>Interview Date</th>
+        <th>Status</th>
+        <th>Remarks</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let candidate of paginatedCandidates; let i = index">
+        <td>{{ (currentPage - 1) * pageSize + (i + 1) }}</td> <!-- Display correct serial number -->
+        <td>{{ candidate.Candidate_Name }}</td>
+        <td>{{ candidate.Position }}</td>
+        <td>{{ candidate.Round_Number || 'N/A' }}</td>
+        <td>{{ candidate.Interviewer || 'N/A' }}</td>
+        <td>{{ candidate.Interview_Date || 'N/A' }}</td>
+        <td>{{ candidate.Status || 'N/A' }}</td>
+        <td>{{ candidate.Remarks || 'N/A' }}</td>
+        <td>
+          <button (click)="selectCandidate(candidate); $event.stopPropagation()">...</button>
+          <button (click)="showAddRoundSection(candidate)">Add Interview Round</button>
+        </td>
+      </tr>
+    </tbody>
   </table>
-  
-  <!-- Options for the selected candidate -->
- 
+
+  <!-- Pagination Controls -->
+  <div class="pagination-controls">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
 </div>
+
+
+
+
+
+
 
 
 <!-- Modal for Actions (Update, View History, Delete) -->
