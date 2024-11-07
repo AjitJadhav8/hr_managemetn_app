@@ -115,7 +115,7 @@ app.get('/api/candidates', (req, res) => {
   WHERE 
       c.u_id = ?
   ORDER BY 
-      c.c_id;
+    c.c_id DESC;  -- Change to DESC to get most recent first
   `;
 
   db.query(query, [u_id], (err, results) => {
@@ -130,29 +130,7 @@ app.get('/api/candidates', (req, res) => {
 
   
 
-// Add a new candidate (without interview rounds)
-// app.post('/api/candidates', (req, res) => {
-//   const { name, position, u_id } = req.body;
 
-//   if (!name || !position || !u_id) {
-//     return res.status(400).json({ error: 'All fields are required' });
-//   }
-
-//   const upperCaseName = name.toUpperCase();
-
-//   const addCandidateQuery = `
-//     INSERT INTO candidates (c_name, position, u_id) VALUES (?, ?, ?)
-//   `;
-
-//   db.query(addCandidateQuery, [upperCaseName, position, u_id], (err, result) => {
-//     if (err) {
-//       console.error('Error inserting candidate:', err);
-//       return res.status(500).json({ error: err.message || 'Database error' });
-//     }
-
-//     res.status(201).json({ message: 'Candidate added successfully', c_id: result.insertId });
-//   });
-// });
 
 
 app.post('/api/candidates', (req, res) => {

@@ -97,16 +97,6 @@ export class HRComponent implements OnInit  {
     this.showActionModal = false;
   }
 
-
-
-
-
-
-
-
-
-
-
   showUpdateCandidateSection() {
     this.showUpdateCandidate = true;
     this.showAddRound = false; // Hide add round section
@@ -141,7 +131,6 @@ export class HRComponent implements OnInit  {
   }
 
 
-
   newCandidate: { name: string, position: string | undefined, customPosition?: string } = { name: '', position: undefined, customPosition: '' };
 
   addNewCandidate() {
@@ -165,13 +154,21 @@ export class HRComponent implements OnInit  {
 
         this.newCandidate = { name: '', position: '', customPosition: '' }; // Reset form
         this.isCustomPosition = false; // Reset custom position flag
+
+
+
+        // Show success alert
+        this.showAlert('Candidate added successfully!', 'success');
+
+
       },
       error => {
         console.error('Error adding candidate:', error); // Log any error
+        this.showAlert('Failed to add candidate. Please try again.', 'error');
+
       }
     );
   }
-
 
 
 
@@ -211,7 +208,6 @@ export class HRComponent implements OnInit  {
 
 
 
-
   addNewRound() {
     // Prepare final values for each field, using custom fields if selected as "Custom"
     const roundData = {
@@ -227,6 +223,8 @@ export class HRComponent implements OnInit  {
     this.dataService.addNewRound(this.selectedCandidate.Candidate_ID, roundData)
       .subscribe(
         () => {
+          this.showAlert('Interview round added successfully!', 'alert-success'); // Success alert
+
           this.getCandidates(); // Refresh candidate list
           this.getInterviewOptions(); // Refetch interview options for dropdowns
 
@@ -234,12 +232,11 @@ export class HRComponent implements OnInit  {
         },
         error => {
           console.error('Error adding round:', error);
+          this.showAlert('Error adding interview round. Please try again.', 'alert-danger'); // Error alert
+
         }
       );
   }
-
-
-
 
 
   deleteInterviewRound(candidateId: number, roundNumber: string, candidateName: string) {
@@ -282,14 +279,20 @@ export class HRComponent implements OnInit  {
         .subscribe(
           (response) => {
             console.log('Candidate updated:', response);
+            this.showAlert('Candidate updated successfully!', 'alert-success'); // Success alert
+
             this.getCandidates(); // Refresh the candidate list after updating
           },
           (error) => {
             console.error('Error updating candidate:', error);
+            this.showAlert('Error updating candidate. Please try again.', 'alert-danger'); // Error alert
+
           }
         );
     } else {
       console.error('No candidate selected for update.');
+      this.showAlert('No candidate selected for update.', 'alert-warning'); // Warning alert if no candidate is selected
+
     }
   }
 
@@ -406,5 +409,37 @@ export class HRComponent implements OnInit  {
   closeHistoryModal() {
     this.showHistory = false;
   }
+
+
+
+
+
+// Component TypeScript file
+
+// Variables for alert message and type
+alertMessage: string | null = null;
+alertType: string = 'alert-success'; // or any other class for styling
+
+// Function to show alert
+showAlert(message: string, type: string = 'alert-success') {
+  this.alertMessage = message;
+  this.alertType = type;
+  
+  // Hide alert after 3 seconds
+  setTimeout(() => {
+    this.alertMessage = null;
+  }, 3000);
+}
+
+// Call this function where needed, e.g., after adding a new candidate
+
+
+
+
+
+
+
+
+
 
 }

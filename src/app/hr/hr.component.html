@@ -8,6 +8,9 @@
   </div>
 </div>
 
+
+
+
 <!-- hr.component.html -->
 <div *ngIf="showChangePasswordForm" class="change-password-form">
   <h3>Change Password</h3>
@@ -64,6 +67,8 @@
   
       <button type="submit">Add Candidate</button>
     </form>
+    <div *ngIf="alertMessage" class="alert" [ngClass]="alertType">{{ alertMessage }}</div>
+
   </div>
   
 
@@ -109,16 +114,7 @@
  
 </div>
 
-<!-- <div *ngIf="selectedCandidate" class="selected-candidate-actions">
-  <h3>Actions for {{ selectedCandidate.Candidate_Name }}</h3>
-  <button (click)="showUpdateCandidateSection()">Update Candidate</button>
-  <button (click)="showHistorySection()">View History</button>
-  <button (click)="deleteInterviewRound(selectedCandidate.Candidate_ID, selectedCandidate.Round_Number, selectedCandidate.Candidate_Name)">
-    Delete Round
-  </button>
 
-</div> -->
-<!-- Modal for Actions (Update, View History, Delete) -->
 <!-- Modal for Actions (Update, View History, Delete) -->
 <div *ngIf="showActionModal" class="modal">
   <div class="modal-content">
@@ -202,7 +198,10 @@
       <!-- Submit Button -->
       <button type="submit">Add Interview Round</button>
     </form>
+    <div *ngIf="alertMessage" class="alert" [ngClass]="alertType">{{ alertMessage }}</div>
+
   </div>
+
 </div>
 
 
@@ -229,8 +228,12 @@
       </div>
 
       <button type="submit">Update Candidate</button>
+
     </form>
+    <div *ngIf="alertMessage" class="alert" [ngClass]="alertType">{{ alertMessage }}</div>
+
   </div>
+
 </div>
 
 <!-- Interview History Modal -->
