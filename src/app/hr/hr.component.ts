@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: './hr.component.html',
   styleUrl: './hr.component.css'
 })
-export class HRComponent implements OnInit  {
+export class HRComponent implements OnInit {
   loggedInHR: string = '';
   loggedInHRId: string | null = '';
   candidates: any[] = [];
@@ -74,12 +74,12 @@ export class HRComponent implements OnInit  {
     this.selectedCandidate = candidate; // Set the selected candidate for the add round form
     this.newRound = {
       round_number: candidate.Round_Number ? (parseInt(candidate.Round_Number, 10) + 1).toString() : '1',
-      interviewer: '', 
-      interview_date: '', 
-      status: '', 
-      remarks: '' 
+      interviewer: '',
+      interview_date: '',
+      status: '',
+      remarks: ''
     };
-    this.showAddRound = true; 
+    this.showAddRound = true;
     this.toggleAddRoundModal(); // Open the modal
 
   }
@@ -192,58 +192,27 @@ export class HRComponent implements OnInit  {
 
   newCandidate: { name: string, position: string | undefined, customPosition?: string } = { name: '', position: '', customPosition: '' };
 
-  // addNewCandidate() {
-  //   // If position is 'Custom', assign customPosition to position
-  //   if (this.isCustomPosition) {
-  //     this.newCandidate.position = this.newCandidate.customPosition || ''; // Ensure position is a string (use empty string if undefined)
-  //   }
-
-  //   // Prepare the candidate data, making sure position is a valid string
-  //   const candidateData = {
-  //     name: this.newCandidate.name,
-  //     position: this.newCandidate.position || '', // Provide an empty string if position is undefined
-  //     u_id: this.loggedInHRId
-  //   };
-
-  //   // Call the service to add the new candidate
-  //   this.dataService.addNewCandidate(candidateData).subscribe(
-  //     response => {
-  //       this.getCandidates(); // Refresh candidate list after adding
-  //       this.getInterviewOptions();  // Refetch interview options for dropdowns
-
-  //       this.newCandidate = { name: '', position: '', customPosition: '' }; // Reset form
-  //       this.isCustomPosition = false; // Reset custom position flag
-
-
-
-  //       // Show success alert
-  //       this.showAlert('Candidate added successfully!', 'success');
-
-
-  //     },
-  //     error => {
-  //       console.error('Error adding candidate:', error); // Log any error
-  //       this.showAlert('Failed to add candidate. Please try again.', 'error');
-
-  //     }
-  //   );
-  // }
 
 
 
   addNewCandidate() {
+      // Check if the interview date is selected
+  if (!this.newRound.interview_date) {
+    this.showAlert('Please select all fields with interview date.', 'error');
+    return; // Stop execution if date is missing
+  }
     // If position is 'Custom', assign customPosition to position
     if (this.isCustomPosition) {
       this.newCandidate.position = this.newCandidate.customPosition || ''; // Ensure position is a string
     }
-  
+
     // Prepare candidate data
     const candidateData = {
       name: this.newCandidate.name,
       position: this.newCandidate.position || '',
       u_id: this.loggedInHRId
     };
-  
+
     // Prepare round data
     const roundData = {
       round_number: this.newRound.round_number === 'Custom' ? this.newRound.customRoundNumber : this.newRound.round_number,
@@ -252,7 +221,7 @@ export class HRComponent implements OnInit  {
       status: this.newRound.status === 'Custom' ? this.newRound.customStatus : this.newRound.status,
       remarks: this.newRound.remarks
     };
-  
+
     // Call the service to add both candidate and round
     this.dataService.addNewCandidateWithRound(candidateData, roundData).subscribe(
       response => {
@@ -261,7 +230,7 @@ export class HRComponent implements OnInit  {
         this.newCandidate = { name: '', position: '', customPosition: '' }; // Reset form
         this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '', customRoundNumber: '', customInterviewer: '', customStatus: '' }; // Reset round form
         this.isCustomPosition = false; // Reset custom position flag
-  
+
         // Show success alert
         this.showAlert('Candidate and Interview Round added successfully!', 'success');
       },
@@ -271,7 +240,7 @@ export class HRComponent implements OnInit  {
       }
     );
   }
-  
+
 
 
   addNewRound() {
@@ -305,7 +274,7 @@ export class HRComponent implements OnInit  {
   }
 
 
-  
+
 
   interviewOptions: any = {
     positions: [],
@@ -348,10 +317,10 @@ export class HRComponent implements OnInit  {
 
   deleteInterviewRound(candidateId: number, roundNumber: string, candidateName: string) {
     const confirmDelete = confirm(`Are you sure you want to delete interview round ${roundNumber} for ${candidateName}?`);
-  
+
     if (confirmDelete) {
       const encodedRoundNumber = encodeURIComponent(roundNumber); // Ensure round_number is URL-safe
-  
+
       this.dataService.deleteInterviewRound(candidateId, encodedRoundNumber)
         .subscribe(
           (response) => {
@@ -370,7 +339,7 @@ export class HRComponent implements OnInit  {
       console.log('Delete operation was canceled.');
     }
   }
-  
+
 
 
   updateCandidate() {
@@ -502,7 +471,7 @@ export class HRComponent implements OnInit  {
     );
   }
 
-  
+
   openUpdateCandidateModal() {
     this.showUpdateCandidate = true;
   }
@@ -524,24 +493,24 @@ export class HRComponent implements OnInit  {
 
 
 
-// Component TypeScript file
+  // Component TypeScript file
 
-// Variables for alert message and type
-alertMessage: string | null = null;
-alertType: string = 'alert-success'; // or any other class for styling
+  // Variables for alert message and type
+  alertMessage: string | null = null;
+  alertType: string = 'alert-success'; // or any other class for styling
 
-// Function to show alert
-showAlert(message: string, type: string = 'alert-success') {
-  this.alertMessage = message;
-  this.alertType = type;
-  
-  // Hide alert after 3 seconds
-  setTimeout(() => {
-    this.alertMessage = null;
-  }, 3000);
-}
+  // Function to show alert
+  showAlert(message: string, type: string = 'alert-success') {
+    this.alertMessage = message;
+    this.alertType = type;
 
-// Call this function where needed, e.g., after adding a new candidate
+    // Hide alert after 3 seconds
+    setTimeout(() => {
+      this.alertMessage = null;
+    }, 3000);
+  }
+
+  // Call this function where needed, e.g., after adding a new candidate
 
 
 
