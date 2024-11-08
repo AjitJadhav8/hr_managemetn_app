@@ -52,11 +52,8 @@ export class HRComponent implements OnInit  {
   }
 
 
-  currentSection: string = 'addCandidate'; // Show Add Candidate section by default
 
-  showSection(section: string) {
-    this.currentSection = section;
-  }
+
 
   showAddRound: boolean = false;  // New property to control Add Round section visibility
   showUpdateCandidate: boolean = false;
@@ -193,7 +190,7 @@ export class HRComponent implements OnInit  {
 
 
 
-  newCandidate: { name: string, position: string | undefined, customPosition?: string } = { name: '', position: undefined, customPosition: '' };
+  newCandidate: { name: string, position: string | undefined, customPosition?: string } = { name: '', position: '', customPosition: '' };
 
   // addNewCandidate() {
   //   // If position is 'Custom', assign customPosition to position
@@ -270,25 +267,11 @@ export class HRComponent implements OnInit  {
       },
       error => {
         console.error('Error adding candidate with round:', error);
-        this.showAlert('Failed to add candidate and round. Please try again.', 'error');
+        this.showAlert('Failed to add candidate and round. Please fill all the fields.', 'error');
       }
     );
   }
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   addNewRound() {
@@ -373,11 +356,14 @@ export class HRComponent implements OnInit  {
         .subscribe(
           (response) => {
             console.log('Interview round deleted:', response);
+            this.showAlert(`Interview round ${roundNumber} for ${candidateName} deleted successfully.`, 'alert-success'); // Success alert
             this.getCandidates(); // Refresh candidate list after deletion
             this.getInterviewOptions(); // Refresh interview options after deleting a round
+
           },
           (error) => {
             console.error('There was an error deleting the interview round!', error);
+            this.showAlert('Error deleting interview round. Please try again.', 'alert-danger'); // Error alert
           }
         );
     } else {
@@ -556,11 +542,6 @@ showAlert(message: string, type: string = 'alert-success') {
 }
 
 // Call this function where needed, e.g., after adding a new candidate
-
-
-
-
-
 
 
 
