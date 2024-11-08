@@ -31,9 +31,27 @@ export class DataService {
   }
 
   // Add a new candidate
-  addNewCandidate(candidateData: { name: string; position: string; u_id: string | null }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/api/candidates`, candidateData);
+  // addNewCandidate(candidateData: { name: string; position: string; u_id: string | null }): Observable<any> {
+  //   return this.http.post<any>(`${this.apiUrl}/api/candidates`, candidateData);
+  // }
+
+
+  addNewCandidateWithRound(candidateData: { name: string; position: string; u_id: string | null }, roundData: any): Observable<any> {
+    const requestData = {
+      candidate: candidateData,
+      round: roundData
+    };
+
+    return this.http.post<any>(`${this.apiUrl}/api/candidates-with-round`, requestData);
   }
+
+
+
+
+
+
+
+
 
   // Add a new interview round
   addNewRound(c_id: number, roundData: any): Observable<any> {

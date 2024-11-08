@@ -136,23 +136,61 @@ app.get('/api/candidates', (req, res) => {
 
 
 
-app.post('/api/candidates', (req, res) => {
-  const { name, position, u_id } = req.body;
+// app.post('/api/candidates', (req, res) => {
+//   const { name, position, u_id } = req.body;
 
-  // Ensure required fields are provided
-  if (!name || !position || !u_id) {
+//   if (!name || !position || !u_id) {
+//     return res.status(400).json({ error: 'All fields are required' });
+//   }
+
+//   // If position is 'Custom', handle the custom position
+//   if (position === 'Custom' && !req.body.customPosition) {
+//     return res.status(400).json({ error: 'Custom position is required' });
+//   }
+
+//   // If position is 'Custom', use the customPosition
+//   const finalPosition = position === 'Custom' ? req.body.customPosition : position;
+
+//   // Sanitize name (convert to uppercase, if required)
+//   const upperCaseName = name.toUpperCase();
+
+//   // Insert the candidate into the database
+//   const addCandidateQuery = `
+//     INSERT INTO candidates (c_name, position, u_id) VALUES (?, ?, ?)
+//   `;
+
+//   db.query(addCandidateQuery, [upperCaseName, finalPosition, u_id], (err, result) => {
+//     if (err) {
+//       console.error('Error inserting candidate:', err);
+//       return res.status(500).json({ error: err.message || 'Database error' });
+//     }
+
+//     res.status(201).json({ message: 'Candidate added successfully', c_id: result.insertId });
+//   });
+// });
+
+
+
+app.post('/api/candidates-with-round', (req, res) => {
+  // Extract candidate and round data from the request
+  const { candidate, round } = req.body;
+  
+  // Ensure candidate and round exist
+  if (!candidate || !round) {
+    return res.status(400).json({ error: 'Candidate and round data are required' });
+  }
+
+  // Unpack candidate and round fields
+  const { name, position, u_id } = candidate;
+  const { round_number, interviewer, interview_date, status, remarks } = round;
+  
+  // Check for missing fields
+  if (!name || !position || !u_id || !round_number || !interviewer || !interview_date || !status) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  // If position is 'Custom', handle the custom position
-  if (position === 'Custom' && !req.body.customPosition) {
-    return res.status(400).json({ error: 'Custom position is required' });
-  }
-
-  // If position is 'Custom', use the customPosition
-  const finalPosition = position === 'Custom' ? req.body.customPosition : position;
-
-  // Sanitize name (convert to uppercase, if required)
+  // Use custom position if provided
+  const finalPosition = position === 'Custom' ? candidate.customPosition : position;
   const upperCaseName = name.toUpperCase();
 
   // Insert the candidate into the database
@@ -166,11 +204,57 @@ app.post('/api/candidates', (req, res) => {
       return res.status(500).json({ error: err.message || 'Database error' });
     }
 
-    res.status(201).json({ message: 'Candidate added successfully', c_id: result.insertId });
+    const candidateId = result.insertId; // Get the inserted candidate's ID
+
+    // Now insert the interview round
+    const addInterviewRoundQuery = `
+      INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(addInterviewRoundQuery, [candidateId, round_number, interviewer, interview_date, status, remarks], (err) => {
+      if (err) {
+        console.error('Error inserting interview round:', err);
+        return res.status(500).json({ error: err.message || 'Database error' });
+      }
+
+      res.status(201).json({ message: 'Candidate and interview round added successfully' });
+    });
   });
 });
 
 
+
+
+
+
+
+
+
+app.post('/api/candidates/:id/interview-rounds', (req, res) => {
+  const { id } = req.params; // Candidate ID from the URL
+  const { round_number, interviewer, interview_date, status, remarks } = req.body;
+
+  // Validate required fields
+  if (!round_number || !interviewer || !interview_date || !status) {
+    return res.status(400).json({ error: 'All fields are required for the interview round' });
+  }
+
+  // Prepare the query
+  const addInterviewRoundQuery = `
+    INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks) 
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  // Execute the query
+  db.query(addInterviewRoundQuery, [id, round_number, interviewer, interview_date, status, remarks], (err) => {
+    if (err) {
+      console.error('Error inserting interview round:', err);
+      return res.status(500).json({ error: err.message || 'Database error' });
+    }
+    res.status(201).json({ message: 'Interview round added successfully' });
+  });
+});
 
 
 
@@ -202,30 +286,7 @@ app.post('/api/candidates', (req, res) => {
 
 
 
-app.post('/api/candidates/:id/interview-rounds', (req, res) => {
-  const { id } = req.params; // Candidate ID from the URL
-  const { round_number, interviewer, interview_date, status, remarks } = req.body;
 
-  // Validate required fields
-  if (!round_number || !interviewer || !interview_date || !status) {
-    return res.status(400).json({ error: 'All fields are required for the interview round' });
-  }
-
-  // Prepare the query
-  const addInterviewRoundQuery = `
-    INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks) 
-    VALUES (?, ?, ?, ?, ?, ?)
-  `;
-
-  // Execute the query
-  db.query(addInterviewRoundQuery, [id, round_number, interviewer, interview_date, status, remarks], (err) => {
-    if (err) {
-      console.error('Error inserting interview round:', err);
-      return res.status(500).json({ error: err.message || 'Database error' });
-    }
-    res.status(201).json({ message: 'Interview round added successfully' });
-  });
-});
 
 
 

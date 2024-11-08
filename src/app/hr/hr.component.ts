@@ -195,44 +195,134 @@ export class HRComponent implements OnInit  {
 
   newCandidate: { name: string, position: string | undefined, customPosition?: string } = { name: '', position: undefined, customPosition: '' };
 
+  // addNewCandidate() {
+  //   // If position is 'Custom', assign customPosition to position
+  //   if (this.isCustomPosition) {
+  //     this.newCandidate.position = this.newCandidate.customPosition || ''; // Ensure position is a string (use empty string if undefined)
+  //   }
+
+  //   // Prepare the candidate data, making sure position is a valid string
+  //   const candidateData = {
+  //     name: this.newCandidate.name,
+  //     position: this.newCandidate.position || '', // Provide an empty string if position is undefined
+  //     u_id: this.loggedInHRId
+  //   };
+
+  //   // Call the service to add the new candidate
+  //   this.dataService.addNewCandidate(candidateData).subscribe(
+  //     response => {
+  //       this.getCandidates(); // Refresh candidate list after adding
+  //       this.getInterviewOptions();  // Refetch interview options for dropdowns
+
+  //       this.newCandidate = { name: '', position: '', customPosition: '' }; // Reset form
+  //       this.isCustomPosition = false; // Reset custom position flag
+
+
+
+  //       // Show success alert
+  //       this.showAlert('Candidate added successfully!', 'success');
+
+
+  //     },
+  //     error => {
+  //       console.error('Error adding candidate:', error); // Log any error
+  //       this.showAlert('Failed to add candidate. Please try again.', 'error');
+
+  //     }
+  //   );
+  // }
+
+
+
   addNewCandidate() {
     // If position is 'Custom', assign customPosition to position
     if (this.isCustomPosition) {
-      this.newCandidate.position = this.newCandidate.customPosition || ''; // Ensure position is a string (use empty string if undefined)
+      this.newCandidate.position = this.newCandidate.customPosition || ''; // Ensure position is a string
     }
-
-    // Prepare the candidate data, making sure position is a valid string
+  
+    // Prepare candidate data
     const candidateData = {
       name: this.newCandidate.name,
-      position: this.newCandidate.position || '', // Provide an empty string if position is undefined
+      position: this.newCandidate.position || '',
       u_id: this.loggedInHRId
     };
-
-    // Call the service to add the new candidate
-    this.dataService.addNewCandidate(candidateData).subscribe(
+  
+    // Prepare round data
+    const roundData = {
+      round_number: this.newRound.round_number === 'Custom' ? this.newRound.customRoundNumber : this.newRound.round_number,
+      interviewer: this.newRound.interviewer === 'Custom' ? this.newRound.customInterviewer : this.newRound.interviewer,
+      interview_date: this.formatLocalDate(this.newRound.interview_date),
+      status: this.newRound.status === 'Custom' ? this.newRound.customStatus : this.newRound.status,
+      remarks: this.newRound.remarks
+    };
+  
+    // Call the service to add both candidate and round
+    this.dataService.addNewCandidateWithRound(candidateData, roundData).subscribe(
       response => {
-        this.getCandidates(); // Refresh candidate list after adding
-        this.getInterviewOptions();  // Refetch interview options for dropdowns
-
+        this.getCandidates(); // Refresh candidate list
+        this.getInterviewOptions(); // Refetch interview options
         this.newCandidate = { name: '', position: '', customPosition: '' }; // Reset form
+        this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '', customRoundNumber: '', customInterviewer: '', customStatus: '' }; // Reset round form
         this.isCustomPosition = false; // Reset custom position flag
-
-
-
+  
         // Show success alert
-        this.showAlert('Candidate added successfully!', 'success');
-
-
+        this.showAlert('Candidate and Interview Round added successfully!', 'success');
       },
       error => {
-        console.error('Error adding candidate:', error); // Log any error
-        this.showAlert('Failed to add candidate. Please try again.', 'error');
-
+        console.error('Error adding candidate with round:', error);
+        this.showAlert('Failed to add candidate and round. Please try again.', 'error');
       }
     );
   }
+  
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  addNewRound() {
+    // Prepare final values for each field, using custom fields if selected as "Custom"
+    const roundData = {
+      round_number: this.newRound.round_number === 'Custom' ? this.newRound.customRoundNumber : this.newRound.round_number,
+      interviewer: this.newRound.interviewer === 'Custom' ? this.newRound.customInterviewer : this.newRound.interviewer,
+      interview_date: this.formatLocalDate(this.newRound.interview_date), // Adjust date formatting as needed
+      status: this.newRound.status === 'Custom' ? this.newRound.customStatus : this.newRound.status,
+      remarks: this.newRound.remarks,
+      c_id: this.selectedCandidate.Candidate_ID // Candidate ID
+    };
+
+    // Send data to backend
+    this.dataService.addNewRound(this.selectedCandidate.Candidate_ID, roundData)
+      .subscribe(
+        () => {
+          this.showAlert('Interview round added successfully!', 'alert-success'); // Success alert
+
+          this.getCandidates(); // Refresh candidate list
+          this.getInterviewOptions(); // Refetch interview options for dropdowns
+
+          this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '', customRoundNumber: '', customInterviewer: '', customStatus: '' }; // Reset form
+        },
+        error => {
+          console.error('Error adding round:', error);
+          this.showAlert('Error adding interview round. Please try again.', 'alert-danger'); // Error alert
+
+        }
+      );
+  }
+
+
+  
 
   interviewOptions: any = {
     positions: [],
@@ -270,35 +360,7 @@ export class HRComponent implements OnInit  {
 
 
 
-  addNewRound() {
-    // Prepare final values for each field, using custom fields if selected as "Custom"
-    const roundData = {
-      round_number: this.newRound.round_number === 'Custom' ? this.newRound.customRoundNumber : this.newRound.round_number,
-      interviewer: this.newRound.interviewer === 'Custom' ? this.newRound.customInterviewer : this.newRound.interviewer,
-      interview_date: this.formatLocalDate(this.newRound.interview_date), // Adjust date formatting as needed
-      status: this.newRound.status === 'Custom' ? this.newRound.customStatus : this.newRound.status,
-      remarks: this.newRound.remarks,
-      c_id: this.selectedCandidate.Candidate_ID // Candidate ID
-    };
 
-    // Send data to backend
-    this.dataService.addNewRound(this.selectedCandidate.Candidate_ID, roundData)
-      .subscribe(
-        () => {
-          this.showAlert('Interview round added successfully!', 'alert-success'); // Success alert
-
-          this.getCandidates(); // Refresh candidate list
-          this.getInterviewOptions(); // Refetch interview options for dropdowns
-
-          this.newRound = { round_number: '', interviewer: '', interview_date: '', status: '', remarks: '', customRoundNumber: '', customInterviewer: '', customStatus: '' }; // Reset form
-        },
-        error => {
-          console.error('Error adding round:', error);
-          this.showAlert('Error adding interview round. Please try again.', 'alert-danger'); // Error alert
-
-        }
-      );
-  }
 
 
   deleteInterviewRound(candidateId: number, roundNumber: string, candidateName: string) {
