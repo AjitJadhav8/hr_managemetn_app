@@ -256,7 +256,7 @@
 <!-- Candidate Update Modal -->
 <div *ngIf="showUpdateCandidate" class="modal">
   <div class="modal-content">
-    <span class="close-btn" (click)="closeUpdateCandidateModal()">&times;</span>
+    <span class="close-btn" (click)="closeUpdateCandidateModal()">&larr;</span>
     <h2>Update Candidate Details for {{ selectedCandidate.Candidate_Name }}</h2>
     <form (submit)="updateCandidate()">
       <label for="name">Name:</label>
@@ -285,10 +285,10 @@
 
 <!-- Interview History Modal -->
 <div *ngIf="showHistory" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" (click)="closeHistoryModal()">&times;</span>
+  <div class="modal-content view-history-table-container">
+    <span class="close-btn" (click)="closeHistoryModal()">&larr;</span>
     <h3>Interview History for {{ selectedCandidate.Candidate_Name }}</h3>
-    <table>
+    <table class="view-history-table">
       <thead>
         <tr>
           <th>Round </th>
