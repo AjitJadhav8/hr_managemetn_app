@@ -252,8 +252,8 @@
             <td>{{ candidate.Status || 'N/A' }}</td>
             <td>{{ candidate.Remarks || 'N/A' }}</td>
             <td>
-              <button (click)="selectCandidate(candidate); $event.stopPropagation()">...</button>
               <button (click)="showAddRoundSection(candidate)">Add Round</button>
+              <button (click)="selectCandidate(candidate); $event.stopPropagation()">...</button>
             </td>
           </tr>
         </tbody>
@@ -280,12 +280,15 @@
     <div class="modal-content">
       <span class="close" (click)="closeActionModal()">&times;</span> <!-- Close button -->
       <h2>Actions for {{ selectedCandidate.Candidate_Name }}</h2>
-      <button (click)="showUpdateCandidateSection()">Update Candidate</button>
-      <button (click)="showHistorySection()">View History</button>
-      <button
+      <div class="button-group">
+
+      <button class="action-button" (click)="showUpdateCandidateSection()">Update Candidate</button>
+      <button class="action-button" (click)="showHistorySection()">View History</button>
+      <button class="action-button"
         (click)="deleteInterviewRound(selectedCandidate.Candidate_ID, selectedCandidate.Round_Number, selectedCandidate.Candidate_Name)">
         Delete Round
       </button>
+      </div>
       <div *ngIf="alertMessage" class="alert" [ngClass]="alertType">{{ alertMessage }}</div>
     </div>
   </div>
