@@ -7,12 +7,21 @@ const app = express();
 const port = 3000;
 
 // Database connection
+// const db = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: 'root', 
+//   database: 'demo_db'
+// });
+
+// Database connection
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: 'root', 
+  user: 'db_user',
+  password: 'dbpasskey123',
   database: 'demo_db'
 });
+
 
 db.connect((err) => {
   if (err) throw err;
@@ -20,8 +29,16 @@ db.connect((err) => {
 });
 
 // Middleware
+// app.use(bodyParser.json());
+// app.use(cors());
+
+// Middleware
+
 app.use(bodyParser.json());
-app.use(cors());
+
+app.use(cors({origin: '*'}));
+
+ 
 
 
 // In your Node.js backend
