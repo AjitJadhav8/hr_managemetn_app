@@ -7,20 +7,20 @@ const app = express();
 const port = 3000;
 
 // Database connection
-// const db = mysql.createConnection({
-//   host: 'localhost',
-//   user: 'root',
-//   password: 'root', 
-//   database: 'demo_db'
-// });
-
-// Database connection
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'db_user',
-  password: 'dbpasskey123',
+  user: 'root',
+  password: 'root', 
   database: 'demo_db'
 });
+
+// Database connection
+// const db = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'db_user',
+//   password: 'dbpasskey123',
+//   database: 'demo_db'
+// });
 
 
 db.connect((err) => {
@@ -29,17 +29,12 @@ db.connect((err) => {
 });
 
 // Middleware
-// app.use(bodyParser.json());
-// app.use(cors());
+app.use(bodyParser.json());
+app.use(cors());
 
 // Middleware
-
-app.use(bodyParser.json());
-
-app.use(cors({origin: '*'}));
-
- 
-
+// app.use(bodyParser.json());
+// app.use(cors({origin: '*'}));
 
 // In your Node.js backend
 app.get('/api/interview-options', async (req, res) => {
@@ -66,41 +61,6 @@ app.get('/api/interview-options', async (req, res) => {
 
 
 
-// Get all candidates with interview rounds
-// app.get('/api/candidates', (req, res) => {
-//     const { u_id } = req.query;
-//     if (!u_id) {
-//         return res.status(400).json({ error: 'HR user ID is required' });
-//     }
-
-
-//     const query = `SELECT 
-//     c.c_id AS Candidate_ID,
-//     c.c_name AS Candidate_Name,
-//     c.position AS Position,
-//     ir.round_number AS Round_Number,
-//     ir.interviewer AS Interviewer,
-//     ir.interview_date AS Interview_Date,
-//     ir.status AS Status,
-//     ir.remarks AS Remarks
-// FROM 
-//     candidates c
-// LEFT JOIN 
-//     interview_rounds ir ON c.c_id = ir.c_id
-// WHERE 
-//     c.u_id = ?
-// ORDER BY 
-//     c.c_id, ir.round_number;`;
-
-//     db.query(query, [u_id], (err, results) => {
-//         if (err) {
-//             console.error('Database query error:', err);
-//             return res.status(500).json({ error: 'Database query error' });
-//         }
-//         console.log('Query results:', results); // Log results to see what's being returned
-//         res.json(results);
-//     });
-// });
 app.get('/api/candidates', (req, res) => {
   const { u_id } = req.query;
   if (!u_id) {
@@ -137,7 +97,6 @@ app.get('/api/candidates', (req, res) => {
 
   // ir.interview_date DESC;  -- Sort by interview_date in descending order
 
-
   db.query(query, [u_id], (err, results) => {
       if (err) {
           console.error('Database query error:', err);
@@ -149,44 +108,6 @@ app.get('/api/candidates', (req, res) => {
 });
 
   
-
-
-
-
-// app.post('/api/candidates', (req, res) => {
-//   const { name, position, u_id } = req.body;
-
-//   if (!name || !position || !u_id) {
-//     return res.status(400).json({ error: 'All fields are required' });
-//   }
-
-//   // If position is 'Custom', handle the custom position
-//   if (position === 'Custom' && !req.body.customPosition) {
-//     return res.status(400).json({ error: 'Custom position is required' });
-//   }
-
-//   // If position is 'Custom', use the customPosition
-//   const finalPosition = position === 'Custom' ? req.body.customPosition : position;
-
-//   // Sanitize name (convert to uppercase, if required)
-//   const upperCaseName = name.toUpperCase();
-
-//   // Insert the candidate into the database
-//   const addCandidateQuery = `
-//     INSERT INTO candidates (c_name, position, u_id) VALUES (?, ?, ?)
-//   `;
-
-//   db.query(addCandidateQuery, [upperCaseName, finalPosition, u_id], (err, result) => {
-//     if (err) {
-//       console.error('Error inserting candidate:', err);
-//       return res.status(500).json({ error: err.message || 'Database error' });
-//     }
-
-//     res.status(201).json({ message: 'Candidate added successfully', c_id: result.insertId });
-//   });
-// });
-
-
 
 app.post('/api/candidates-with-round', (req, res) => {
   // Extract candidate and round data from the request
@@ -242,11 +163,7 @@ app.post('/api/candidates-with-round', (req, res) => {
 
 
 
-
-
-
-
-
+// Add a new interview round for an existing candidate
 
 app.post('/api/candidates/:id/interview-rounds', (req, res) => {
   const { id } = req.params; // Candidate ID from the URL
@@ -278,28 +195,6 @@ app.post('/api/candidates/:id/interview-rounds', (req, res) => {
 
 
 
-// Add a new interview round for an existing candidate
-// app.post('/api/candidates/:id/interview-rounds', (req, res) => {
-//   const { id } = req.params; // Candidate ID from the URL
-//   const { round_number, interviewer, interview_date, status, remarks } = req.body;
-
-//   if (!round_number || !interviewer || !interview_date || !status) {
-//     return res.status(400).json({ error: 'All fields are required for the interview round' });
-//   }
-
-//   const addInterviewRoundQuery = `
-//     INSERT INTO interview_rounds (c_id, round_number, interviewer, interview_date, status, remarks) 
-//     VALUES (?, ?, ?, ?, ?, ?)
-//   `;
-
-//   db.query(addInterviewRoundQuery, [id, round_number, interviewer, interview_date, status, remarks], (err) => {
-//     if (err) {
-//       console.error('Error inserting interview round:', err);
-//       return res.status(500).json({ error: err.message || 'Database error' });
-//     }
-//     res.status(201).json({ message: 'Interview round added successfully' });
-//   });
-// });
 
 
 
@@ -311,7 +206,7 @@ app.post('/api/candidates/:id/interview-rounds', (req, res) => {
 
 
 // Delete a candidate
-// Delete an interview round for a candidate
+
 app.delete('/api/candidates/:id/interview-rounds/:round_number', (req, res) => {
   const { id, round_number } = req.params;
 
@@ -498,7 +393,6 @@ app.get('/api/candidates/:id/details', (req, res) => {
 
 
 
-// Change password route
 // Change Password Route
 app.put('/api/change-password', (req, res) => {
   const { userId, currentPassword, newPassword } = req.body;
@@ -557,24 +451,6 @@ app.get('/api/interview_rounds/:c_id', (req, res) => {
     res.json(results); // Ensure JSON data is returned
   });
 });
-
-
-
-
-
-
-
-// In your Node.js backend
-// Fetch distinct values for interview options
-
-
-
-
-
-
-
-
-
 
 
 

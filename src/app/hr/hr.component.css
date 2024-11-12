@@ -1,40 +1,43 @@
-/* Fullscreen modal background */
+
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* Ensure it's above other elements */
+  z-index: 1000;
 }
+
 .button-group {
   display: flex;
   justify-content: space-around;
   margin-top: 15px;
 }
+
 .action-button {
-  margin: 0 10px; /* Adds space to the left and right of each button */
+  margin: 0 10px;
 }
 
-/* Modal content box */
+.change-password-form{
+  height: 500px;
+  width: 500px;
+  margin: 0 auto;
+}
 .modal-content {
   background-color: white;
   padding: 10px;
   border-radius: 5px;
   width: 80%;
-  max-height: 90vh; /* Set a max height (80% of viewport height) */
-  overflow-y: auto; /* Enable vertical scroll if content overflows */
+  max-height: 90vh;
+  overflow-y: auto;
   max-width: 500px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
 }
-
-
-
 
 .modal-content h2 {
   text-align: center;
@@ -42,16 +45,16 @@
   margin-bottom: 10px;
 }
 
-/* Close Button */
-.close {
+
+.close, .close-btn {
   position: absolute;
-  top: 5px;
-  right: 15px;
-  font-size: 24px;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
   cursor: pointer;
 }
 
-/* Form Styling */
+
 .modal-content form {
   display: flex;
   flex-direction: column;
@@ -63,13 +66,13 @@
   flex-direction: column;
 }
 
-/* Label Styling */
+
 .modal-content label {
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-/* Input, Select, and Textarea Styling */
+
 .modal-content input[type="text"],
 .modal-content input[type="date"],
 .modal-content select,
@@ -91,13 +94,12 @@
   box-shadow: 0 0 5px rgba(2, 111, 170, 0.5);
 }
 
-/* Textarea Specific Styling */
 .modal-content textarea {
   min-height: 50px;
-  resize: vertical; /* Allow vertical resizing */
+  resize: vertical;
 }
 
-/* Submit Button */
+
 .modal-content button[type="submit"] {
   background-color: #026faa;
   color: #ffffff;
@@ -114,88 +116,52 @@
   background-color: #005a8a;
 }
 
+.candidate-list-container button {
+  margin: 5px;  /* Adjust the margin value as needed */
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Container to keep table within modal boundaries */
 .view-history-table-container {
-  max-width: 80%; /* Ensure it stays within modal boundaries */
-  overflow-x: auto; /* Horizontal scroll if necessary */
-  padding: 10px; /* Add padding for spacing inside the modal */
+  max-width: 80%;
+  overflow-x: auto;
+  padding: 10px;
   box-sizing: border-box;
 }
 
-/* View History Table Styling */
 .view-history-table {
   width: 100%;
-  table-layout: fixed; /* Force columns to fit within the table width */
+  table-layout: fixed;
   border-collapse: collapse;
   background-color: white;
 }
 
-/* Styling for table header */
-.view-history-table thead th {
+.view-history-table thead th, .table-responsive thead th{
   background-color: #343a40;
   color: white;
   padding: 8px;
-  text-align: left;
-  white-space: nowrap; /* Prevents header text from wrapping */
+  text-align: center;
+  white-space: nowrap;
 }
 
-/* Styling for table rows */
-.view-history-table tbody tr:nth-child(even) {
+.view-history-table tbody tr:nth-child(even), .table-responsive tbody tr:nth-child(even)  {
   background-color: #f5f5f5;
 }
 
-.view-history-table tbody tr:nth-child(odd) {
+.view-history-table tbody tr:nth-child(odd), .table-responsive tbody tr:nth-child(odd){
   background-color: #ffffff;
 }
 
-/* Styling for table cells */
-.view-history-table tbody td {
+.view-history-table tbody td, .table-responsive tbody td {
   padding: 3px;
   border: 1px solid #ddd;
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: nowrap; /* Keep text on a single line */
+  white-space: nowrap;
 }
 
-/* Optional: Adjust scrollbar */
 .view-history-table-container::-webkit-scrollbar {
   height: 6px;
 }
 
-
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px; /* Positioned to the left instead of right */
-  font-size: 20px;
-  cursor: pointer;
-}
-
-
-/* Close button */
-.close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  cursor: pointer;
-}
 
 .alert {
   padding: 0;
@@ -210,7 +176,7 @@
   background-color: red;
 }
 
-/* General Styles */
+
 :host {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -223,7 +189,7 @@
   padding: 0;
 }
 
-/* Navbar Main Styling */
+
 .navbar-main {
   display: flex;
   align-items: center;
@@ -274,99 +240,74 @@ p {
 }
 
 
-/* ------------- */
-
-
-
-
-/* Apply styles only to the table inside the add-candidate-container */
-.add-candidate-container table {
+.add-candidate-container table,
+.candidate-list-container table {
   width: 100%;
-  border-collapse: collapse; /* Ensures there’s no space between table borders */
+  border-collapse: collapse;
 }
 
-.add-candidate-container td {
-  padding: 5px; /* Reduce the padding for tighter spacing */
-  vertical-align: middle; /* Aligns content vertically */
+.add-candidate-container td,
+.candidate-list-container td {
+  padding: 5px;
+  vertical-align: middle;
 }
 
 .add-candidate-container label {
-  display: block; /* Ensures label takes full width */
-  margin-bottom: 1px; /* Small gap below the label */
+  display: block;
+  margin-bottom: 1px;
 }
 
-.add-candidate-container input, 
-.add-candidate-container select, 
-.add-candidate-container textarea {
-  width: 100%; /* Makes inputs, selects, and textareas take up full width */
-  padding: 5px; /* Adds some internal padding for better usability */
-  margin-bottom: 1px; /* Adds space below the input fields */
+.add-candidate-container input,
+.add-candidate-container select,
+.add-candidate-container textarea,
+.candidate-list-container input,
+.candidate-list-container select,
+.candidate-list-container textarea {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 1px;
 }
 
 .add-candidate-container select {
-  max-width: 200px; /* Optional: Limit width of select dropdowns */
+  max-width: 200px;
 }
 
 .add-candidate-container textarea {
-  height: 50px; /* Optional: Set height for textarea */
+  height: 50px;
 }
 
 .add-candidate-container form {
   display: flex;
-  flex-direction: column; /* Aligns items vertically */
-  align-items: center; /* Centers all form elements horizontally */
+  flex-direction: column;
+  align-items: center;
 }
 
 .add-candidate-container button {
-  margin-top: 10px; /* Optional: Adds some space above the button */
-  padding: 10px 20px; /* Optional: Adds padding for better button size */
-  background-color: #026faa; /* Example background color */
-  color: white; /* Button text color */
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #026faa;
+  color: white;
   border: none;
-  border-radius: 5px; /* Optional: Adds rounded corners */
-  cursor: pointer; /* Changes cursor to pointer on hover */
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .add-candidate-container button:hover {
-  background-color: #003f73; /* Changes background color on hover */
+  background-color: #003f73;
 }
 
-
 .add-candidate-container h2 {
-  margin-bottom: 20px; /* Optional: Adds space below the heading */
+  margin-bottom: 20px;
 }
 
 .add-candidate-container {
   display: flex;
-  flex-direction: column; /* Aligns items vertically */
-  align-items: center; /* Centers all elements horizontally */
-  text-align: center; /* Centers the heading text */
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 
-
-/* ------------------- */
-
-
-/* Add New Interview Round Form Styling */
-.add-round-container,
-.update-candidate-container,
-.change-password-form {
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin: 20px auto;
-  width: 60%;
-  max-width: 500px;
-  transition: box-shadow 0.3s ease;
-}
-
-/* Candidate List Container */
-/* Candidate List Container with Scrollbar */
-/* Container for candidate list */
-/* Candidate List Container with Vertical and Horizontal Scrollbars */
 .candidate-list-container {
   max-width: 1460px;
   margin: 20px auto;
@@ -375,67 +316,51 @@ p {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  overflow-y: auto; /* Enable vertical scroll */
-  overflow-x: auto; /* Enable horizontal scroll */
-  max-height: 500px; /* Limit height to enable scroll if content overflows */
-  width: 100%; /* Make sure the container takes up full available width */
-  text-align: center; /* Center the text */
-
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 500px;
+  width: 100%;
+  text-align: center;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-/* Custom Scrollbar Styling */
 .candidate-list-container::-webkit-scrollbar {
-  width: 10px; /* Width of vertical scrollbar */
-  height: 10px; /* Height of horizontal scrollbar */
+  width: 10px;
+  height: 10px;
 }
 
 .candidate-list-container::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Track color */
+  background: #f1f1f1;
   border-radius: 10px;
 }
 
 .candidate-list-container::-webkit-scrollbar-thumb {
-  background-color: #026faa; /* Thumb color */
+  background-color: #026faa;
   border-radius: 10px;
-  border: 3px solid #f1f1f1; /* Optional: space between track and thumb */
+  border: 3px solid #f1f1f1;
 }
 
 .candidate-list-container::-webkit-scrollbar-thumb:hover {
-  background: #003f73; /* Darker color on hover */
+  background: #003f73;
 }
 
-/* Responsive adjustment for scrollbar on smaller screens */
 @media (max-width: 768px) {
   .candidate-list-container {
-    max-height: 300px; /* Reduce height on smaller screens */
+    max-height: 300px;
   }
 }
 
-/* Adjust the table layout for responsive behavior */
+
 .table-responsive {
   width: 100%;
-  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-x: auto;
 }
 
-/* Table should exceed 1400px to trigger horizontal scrolling */
 table {
   width: 100%;
-  min-width: 1400px; /* Ensure the table is wide enough to trigger horizontal scroll */
+  min-width: 1400px;
 }
 
-
-/* Form Styling */
 form {
   background-color: #fff;
   padding: 20px;
@@ -454,7 +379,8 @@ label {
   margin-bottom: 5px;
 }
 
-input, textarea {
+input,
+textarea {
   width: 100%;
   padding: 10px;
   font-size: 14px;
@@ -467,7 +393,6 @@ textarea {
   resize: vertical;
 }
 
-/* Button Styling */
 button {
   background-color: #026faa;
   color: white;
@@ -482,194 +407,3 @@ button:hover {
   background-color: #003f73;
 }
 
-button.delete {
-  background-color: #dc3545;
-}
-
-button.delete:hover {
-  background-color: #c82333;
-}
-
-/* Navbar Styling */
-.navbar {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  gap: 10px;
-}
-
-.navbar button {
-  background-color: #026faa;
-  border: none;
-  color: white;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.navbar button.active {
-  background-color: #005f8c;
-}
-
-.navbar button:hover {
-  background-color: #005f8c;
-}
-
-/* Table Styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-thead th {
-  background-color: #343a40;
-  color: white;
-  padding: 10px;
-  text-align: left;
-}
-
-tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-tbody tr:nth-child(odd) {
-  background-color: #fff;
-}
-
-tbody td {
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-
-tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-td button {
-  margin-right: 10px;
-  background-color: #026faa;
-  border: none;
-  color: white;
-  padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-td button:hover {
-  background-color: #003f73;
-}
-
-.selected-candidate-actions button {
-  background-color: #026faa;
-  border: none;
-  color: white;
-  padding: 10px 15px;
-  margin-right: 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.selected-candidate-actions button:hover {
-  background-color: #003f73;
-}
-
-/* Change Password Form Specific Styling */
-.change-password-form h3 {
-  color: #3498db;
-  margin-bottom: 15px;
-}
-
-.change-password-form label {
-  color: #333;
-}
-
-.change-password-form input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.change-password-form input[type="password"]:focus {
-  border-color: #3498db;
-  outline: none;
-  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-}
-
-.change-password-form button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.change-password-form button:hover {
-  background-color: #2980b9;
-}
-
-/* Custom Scrollbar Styling */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #026faa #e4e4e4;
-}
-
-*::-webkit-scrollbar {
-  width: 8px;
-}
-
-*::-webkit-scrollbar-track {
-  background: #e4e4e4;
-  border-radius: 10px;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: #026faa;
-  border-radius: 10px;
-  border: 2px solid #e4e4e4;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  input, textarea, button {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  table, thead, tbody, th, td, tr {
-    display: block;
-    width: 100%;
-  }
-
-  tr {
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
-  td {
-    padding: 10px;
-    text-align: left;
-    display: block;
-  }
-
-  td button {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .change-password-form {
-    width: 90%;
-    margin: 10px auto;
-  }
-}
